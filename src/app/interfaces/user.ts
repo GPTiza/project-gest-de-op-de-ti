@@ -1,17 +1,15 @@
-import { Time } from "@angular/common";
-
 export interface User {
   id: string;
   name: string;
-  lastName: string;
+  lastname: string;
   phone: string;
   email: string;
   isMale: boolean;
-  birthdate: Date;
+  birthdate: any;
   department: string;
-  location: GeolocationPosition;
+  location: any;
   type:number,
-  entryTime:Date;
-  departureTime:Date;
+  entryTime:string;
+  departureTime:string;
   expiredTime:number
 }

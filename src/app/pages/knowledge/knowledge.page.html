@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Base del Conocimiento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>Problema</ion-col>
+      <ion-col>Solución</ion-col>
+      <ion-col>Tiempo</ion-col>
+      <ion-col>Fecha</ion-col>
+      <ion-col>Acciones</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let service of services">
+      <ion-col>{{service.problem}}</ion-col>
+      <ion-col>{{service.solution}}</ion-col>
+      <ion-col>{{service.time}}</ion-col>
+      <ion-col>{{service.date}}</ion-col>
+      <ion-col>
+        <ion-button color="danger" (click)="delete(service.id)"><ion-icon name="trash"></ion-icon></ion-button>
+        <ion-button color="warning" (click)="edit(service)"><ion-icon name="create"></ion-icon></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="add()"><ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

@@ -1,0 +1,110 @@
+<ion-content>
+  <form [formGroup]="userForm" autocomplete="off">
+    <ion-grid>
+      <h1 class="center">Detalle de usuario</h1>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Nombre: </ion-label>
+            <ion-input formControlName="name"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Apellido: </ion-label>
+            <ion-input formControlName="lastname"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Teléfono: </ion-label>
+            <ion-input formControlName="phone"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Correo: </ion-label>
+            <ion-input formControlName="email" type="email"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Género: </ion-label>
+            <ion-select formControlName="isMale">
+              <ion-select-option [value]="true">Masculino</ion-select-option>
+              <ion-select-option [value]="false">Femenino</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Fecha de nacimiento: </ion-label>
+            <ion-input type="date" formControlName="birthdate"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Departamento: </ion-label>
+            <ion-input formControlName="department"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Tipo: </ion-label>
+            <ion-select formControlName="type">
+              <ion-select-option value="0">Admin</ion-select-option>
+              <ion-select-option value="1">Técnico</ion-select-option>
+              <ion-select-option value="2">Jefe del Taller</ion-select-option>
+              <ion-select-option value="3">Jefe de Departamento</ion-select-option>
+              <ion-select-option value="4">Secretaria</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Latitud: </ion-label>
+            <ion-input formControlName="latitude"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Longitud: </ion-label>
+            <ion-input formControlName="longitude"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Hora de Entrada: </ion-label>
+            <ion-input formControlName="entryTime"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Hora de Salida: </ion-label>
+            <ion-input formControlName="departureTime"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div class="center">
+        <ion-button button [disabled]="!userForm.valid" color="success" (click)="save()">Guardar</ion-button>
+      </div>
+    </ion-grid>
+  </form>
+</ion-content>

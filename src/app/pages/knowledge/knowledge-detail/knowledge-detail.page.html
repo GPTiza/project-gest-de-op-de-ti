@@ -1,0 +1,37 @@
+<ion-content>
+  <form [formGroup]="serviceForm" autocomplete="off">
+    <ion-grid>
+      <h1 class="center">Detalle de servicio</h1>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Problema: </ion-label>
+            <ion-textarea formControlName="problem" rows="5"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Solución: </ion-label>
+            <ion-textarea formControlName="solution" rows="5"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Tiempo (en minutos): </ion-label>
+            <ion-input type="number" formControlName="time"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div class="center">
+        <ion-button button [disabled]="!serviceForm.valid" color="success" (click)="save()">Guardar</ion-button>
+      </div>
+    </ion-grid>
+  </form>
+</ion-content>

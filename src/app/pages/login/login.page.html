@@ -6,13 +6,13 @@
       </ion-card-header>
       <h1 class="title">InciTec</h1>
       <ion-card-content>
-        <form [formGroup]="loginForm" autocomplete="off" (ngSubmit)="signIn()">
+        <form [formGroup]="loginForm" autocomplete="off">
           <div align="center">
             <ion-spinner *ngIf="this.loading"></ion-spinner>
           </div>
           <ion-item class="item">
-            <input autocomplete="off" class="emailinput" required type="number" formControlName="noControl"
-              placeholder="No de Control">
+            <input autocomplete="off" class="emailinput" formControlName="email"
+              placeholder="Correo">
           </ion-item>
           <ion-item class="item">
             <input autocomplete="off" required type="password" formControlName="password" placeholder="Contraseña"

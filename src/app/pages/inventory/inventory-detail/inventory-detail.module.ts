@@ -4,17 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UsersPageRoutingModule } from './users-routing.module';
+import { InventoryDetailPageRoutingModule } from './inventory-detail-routing.module';
 
-import { UsersPage } from './users.page';
+import { InventoryDetailPage } from './inventory-detail.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
-    UsersPageRoutingModule
+    InventoryDetailPageRoutingModule
   ],
-  declarations: [UsersPage]
+  declarations: [InventoryDetailPage]
 })
-export class UsersPageModule {}
+export class InventoryDetailPageModule {}

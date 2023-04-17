@@ -1,0 +1,534 @@
+<ion-content>
+  <form [formGroup]="computerForm" autocomplete="off">
+    <ion-grid>
+      <h1 class="center">Detalle de equipo</h1>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Nombre: </ion-label>
+            <ion-input formControlName="name"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Marca: </ion-label>
+            <ion-input formControlName="brand"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Fecha de compra: </ion-label>
+            <ion-input formControlName="date" type="date"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Departamento: </ion-label>
+            <ion-select formControlName="department">
+              <ion-select-option value="Sistemas">Sistemas</ion-select-option>
+              <ion-select-option value="Bioquimica">Bioquimica</ion-select-option>
+              <ion-select-option value="Industrial">Industrial</ion-select-option>
+              <ion-select-option value="Posgrado">Posgrado</ion-select-option>
+              <ion-select-option value="Mecanica">Mecanica</ion-select-option>
+              <ion-select-option value="eco/adm">Economico/Administrativo</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item [ngSwitch]="computerForm.controls['department'].value!">
+            <ion-label>Edificio: </ion-label>
+            <ion-select *ngSwitchDefault formControlName="edificio">
+              <ion-select-option value=""></ion-select-option>
+            </ion-select>
+            <ion-select *ngSwitchCase="'Sistemas'" formControlName="edificio">
+              <ion-select-option *ngFor="let edificio of edificiosSistemas"
+                [value]="edificio">{{edificio}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Aula: </ion-label>
+            <ion-select formControlName="aula">
+              <ion-select-option value="A1">A1</ion-select-option>
+              <ion-select-option value="A2">A2</ion-select-option>
+              <ion-select-option value="A3">A3</ion-select-option>
+              <ion-select-option value="A4">A4</ion-select-option>
+              <ion-select-option value="A5">A5</ion-select-option>
+              <ion-select-option value="A6">A6</ion-select-option>
+              <ion-select-option value="A7">A7</ion-select-option>
+              <ion-select-option value="A8">A8</ion-select-option>
+              <ion-select-option value="LP">LP</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- Ponerle form -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Uso: </ion-label>
+            <ion-select formControlName="uso">
+              <ion-select-option value="Administrativo">Administrativo</ion-select-option>
+              <ion-select-option value="Docente">Docente</ion-select-option>
+              <ion-select-option value="Alumno">Alumno</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Tipo de Compra: </ion-label>
+            <ion-select formControlName="tipoCompra">
+              <ion-select-option value="Donación">Donación</ion-select-option>
+              <ion-select-option value="Comprada">Comprada</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Tipo de Equipo: </ion-label>
+            <ion-select formControlName="tipoEquipo">
+              <ion-select-option value="pc">Computadora de Escritorio</ion-select-option>
+              <ion-select-option value="laptop">Laptop</ion-select-option>
+              <ion-select-option value="aio">All in one</ion-select-option>
+              <ion-select-option value="printer">Impresora</ion-select-option>
+              <ion-select-option value="projector">Proyector</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>SO: </ion-label>
+            <ion-select formControlName="so">
+              <ion-select-option value="Windows">Windows</ion-select-option>
+              <ion-select-option value="MacOS">MacOS</ion-select-option>
+              <ion-select-option value="Linux">Linux</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Red: </ion-label>
+            <ion-input formControlName="red"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Longitud: </ion-label>
+            <ion-input formControlName="latitude"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Latitud: </ion-label>
+            <ion-input formControlName="longitude"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Responsable: </ion-label>
+            <ion-select formControlName="responsable">
+              <ion-select-option *ngFor="let user of users" [value]="user">{{user.name}}
+                {{user.lastname}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Almacenamiento</h3>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="diskserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <!-- Nombre -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="diskname"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Capacidad (en Gbs): </ion-label>
+                    <ion-input formControlName="diskcapacity" type="number"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo: </ion-label>
+                    <ion-select formControlName="disktype">
+                      <ion-select-option value="HDD">HDD</ion-select-option>
+                      <ion-select-option value="SDD">SDD</ion-select-option>
+                      <ion-select-option value="SDD M2">SDD M2</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input formControlName="diskwarrantyExpirationDate" type="date"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Memoria RAM</h3>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="ramserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <!-- Nombre -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="ramname"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Capacidad (en Gbs): </ion-label>
+                    <ion-input type="number" formControlName="ramcapacity"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo: </ion-label>
+                    <ion-select formControlName="ramtype">
+                      <ion-select-option value="DDR2">DDR2</ion-select-option>
+                      <ion-select-option value="DDR3">DDR3</ion-select-option>
+                      <ion-select-option value="DDR4">DDR4</ion-select-option>
+                      <ion-select-option value="DDR5">DDR5</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input type="date" formControlName="ramwarrantyExpirationDate"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Fuente de Poder</h3>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="powerSupplyserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <!-- Nombre -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="powerSupplyname"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Capacidad (en w): </ion-label>
+                    <ion-input type="number" formControlName="powerSupplycapacity"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo: </ion-label>
+                    <ion-select formControlName="powerSupplytype">
+                      <ion-select-option value="AT">AT</ion-select-option>
+                      <ion-select-option value="ATX">ATX</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input type="date" formControlName="powerSupplywarrantyExpirationDate"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Tarjeta Madre</h3>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="motherboardserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input type="date" formControlName="motherboardwarrantyExpirationDate"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <!-- Marca y modelo -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="motherboardname"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo: </ion-label>
+                    <ion-select formControlName="motherboardtype">
+                      <ion-select-option value="Estándar ATX">Estándar ATX</ion-select-option>
+                      <ion-select-option value="Micro ATX">Micro ATX</ion-select-option>
+                      <ion-select-option value="Mini ITX">Mini ITX</ion-select-option>
+                      <ion-select-option value="Nano ITX">Nano ITX</ion-select-option>
+                      <ion-select-option value="Pico ITX">Pico ITX</ion-select-option>
+                      <ion-select-option value="Mobile ITX">Mobile ITX</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Gabinete</h3>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="cabinetserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input type="date" formControlName="cabinetwarrantyExpirationDate"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <!-- Nombre -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="cabinetname"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo: </ion-label>
+                    <ion-select formControlName="cabinettype">
+                      <ion-select-option value="FullTower">FullTower</ion-select-option>
+                      <ion-select-option value="MidTower">MidTower</ion-select-option>
+                      <ion-select-option value="MiniTower">MiniTower</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Procesador</h3>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="processadorserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <!-- Nombre -->
+                  <ion-label>Marca: </ion-label>
+                  <ion-input formControlName="processadorname"></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-item>
+                      <ion-label>Expiración de garantía: </ion-label>
+                      <ion-input type="date" formControlName="processadorwarrantyExpirationDate"></ion-input>
+                    </ion-item>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Mouse</h3>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="mouseserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <!-- Nombre -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="mousename"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input type="date" formControlName="mousewarrantyExpirationDate"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h3>Teclado</h3>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>No. de Serie: </ion-label>
+                    <ion-input formControlName="keyboardserieNumber"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <!-- Nombre -->
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="keyboardname"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Expiración de garantía: </ion-label>
+                    <ion-input type="date" formControlName="keyboardwarrantyExpirationDate"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-col>
+
+      </ion-row>
+
+    </ion-grid>
+    <div class="center">
+      <ion-button color="success" [disabled]="!computerForm.valid" (click)="save()">Guardar</ion-button>
+    </div>
+  </form>
+</ion-content>

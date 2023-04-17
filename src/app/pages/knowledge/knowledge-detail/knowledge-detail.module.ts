@@ -4,17 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UsersPageRoutingModule } from './users-routing.module';
+import { KnowledgeDetailPageRoutingModule } from './knowledge-detail-routing.module';
 
-import { UsersPage } from './users.page';
+import { KnowledgeDetailPage } from './knowledge-detail.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
-    UsersPageRoutingModule
+    KnowledgeDetailPageRoutingModule
   ],
-  declarations: [UsersPage]
+  declarations: [KnowledgeDetailPage]
 })
-export class UsersPageModule {}
+export class KnowledgeDetailPageModule {}

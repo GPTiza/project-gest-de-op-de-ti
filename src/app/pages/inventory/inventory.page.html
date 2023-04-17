@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inventario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>Nombre</ion-col>
+      <ion-col>Departamento</ion-col>
+      <ion-col>Responsable</ion-col>
+      <ion-col>Acciones</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let computer of computers">
+      <ion-col>{{computer.name}}</ion-col>
+      <ion-col>{{computer.department}}</ion-col>
+      <ion-col>{{computer.responsable.name}} {{computer.responsable.lastname}}</ion-col>
+      <ion-col>
+        <ion-button color="danger" (click)="del(computer.id)"><ion-icon name="trash"></ion-icon></ion-button>
+        <ion-button color="warning" (click)="edit(computer)"><ion-icon name="create"></ion-icon></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="add()"><ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
