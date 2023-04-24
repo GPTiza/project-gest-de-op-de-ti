@@ -26,7 +26,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Departamento: </ion-label>
-            <ion-select formControlName="department">
+            <ion-select interface="popover" formControlName="department">
               <ion-select-option value="Sistemas">Sistemas</ion-select-option>
               <ion-select-option value="Bioquimica">Bioquimica</ion-select-option>
               <ion-select-option value="Industrial">Industrial</ion-select-option>
@@ -39,10 +39,10 @@
         <ion-col>
           <ion-item [ngSwitch]="computerForm.controls['department'].value!">
             <ion-label>Edificio: </ion-label>
-            <ion-select *ngSwitchDefault formControlName="edificio">
+            <ion-select interface="popover" *ngSwitchDefault formControlName="edificio">
               <ion-select-option value=""></ion-select-option>
             </ion-select>
-            <ion-select *ngSwitchCase="'Sistemas'" formControlName="edificio">
+            <ion-select interface="popover" *ngSwitchCase="'Sistemas'" formControlName="edificio">
               <ion-select-option *ngFor="let edificio of edificiosSistemas"
                 [value]="edificio">{{edificio}}</ion-select-option>
             </ion-select>
@@ -51,7 +51,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Aula: </ion-label>
-            <ion-select formControlName="aula">
+            <ion-select interface="popover" formControlName="aula">
               <ion-select-option value="A1">A1</ion-select-option>
               <ion-select-option value="A2">A2</ion-select-option>
               <ion-select-option value="A3">A3</ion-select-option>
@@ -71,7 +71,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Uso: </ion-label>
-            <ion-select formControlName="uso">
+            <ion-select interface="popover" formControlName="uso">
               <ion-select-option value="Administrativo">Administrativo</ion-select-option>
               <ion-select-option value="Docente">Docente</ion-select-option>
               <ion-select-option value="Alumno">Alumno</ion-select-option>
@@ -81,7 +81,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Tipo de Compra: </ion-label>
-            <ion-select formControlName="tipoCompra">
+            <ion-select interface="popover" formControlName="tipoCompra">
               <ion-select-option value="Donación">Donación</ion-select-option>
               <ion-select-option value="Comprada">Comprada</ion-select-option>
             </ion-select>
@@ -90,7 +90,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Tipo de Equipo: </ion-label>
-            <ion-select formControlName="tipoEquipo">
+            <ion-select interface="popover" formControlName="tipoEquipo">
               <ion-select-option value="pc">Computadora de Escritorio</ion-select-option>
               <ion-select-option value="laptop">Laptop</ion-select-option>
               <ion-select-option value="aio">All in one</ion-select-option>
@@ -101,11 +101,12 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row
+        *ngIf="this.computerForm.controls['tipoEquipo'].value=='pc' || this.computerForm.controls['tipoEquipo'].value=='laptop' || this.computerForm.controls['tipoEquipo'].value=='aio'">
         <ion-col>
           <ion-item>
             <ion-label>SO: </ion-label>
-            <ion-select formControlName="so">
+            <ion-select interface="popover" formControlName="so">
               <ion-select-option value="Windows">Windows</ion-select-option>
               <ion-select-option value="MacOS">MacOS</ion-select-option>
               <ion-select-option value="Linux">Linux</ion-select-option>
@@ -137,19 +138,18 @@
         <ion-col>
           <ion-item>
             <ion-label>Responsable: </ion-label>
-            <ion-select formControlName="responsable">
-              <ion-select-option *ngFor="let user of users" [value]="user">{{user.name}}
+            <ion-select interface="popover" formControlName="responsable">
+              <ion-select-option *ngFor="let user of users" [value]="user.id">{{user.name}}
                 {{user.lastname}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row
+        *ngIf="this.computerForm.controls['tipoEquipo'].value=='pc' || this.computerForm.controls['tipoEquipo'].value=='laptop' || this.computerForm.controls['tipoEquipo'].value=='aio'">
         <ion-col>
           <ion-item>
-
-
             <ion-grid>
               <ion-row>
                 <ion-col>
@@ -181,7 +181,7 @@
                 <ion-col>
                   <ion-item>
                     <ion-label>Tipo: </ion-label>
-                    <ion-select formControlName="disktype">
+                    <ion-select interface="popover" formControlName="disktype">
                       <ion-select-option value="HDD">HDD</ion-select-option>
                       <ion-select-option value="SDD">SDD</ion-select-option>
                       <ion-select-option value="SDD M2">SDD M2</ion-select-option>
@@ -235,7 +235,7 @@
                 <ion-col>
                   <ion-item>
                     <ion-label>Tipo: </ion-label>
-                    <ion-select formControlName="ramtype">
+                    <ion-select interface="popover" formControlName="ramtype">
                       <ion-select-option value="DDR2">DDR2</ion-select-option>
                       <ion-select-option value="DDR3">DDR3</ion-select-option>
                       <ion-select-option value="DDR4">DDR4</ion-select-option>
@@ -257,7 +257,8 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row
+        *ngIf="this.computerForm.controls['tipoEquipo'].value=='pc' || this.computerForm.controls['tipoEquipo'].value=='laptop' || this.computerForm.controls['tipoEquipo'].value=='aio'">
         <ion-col>
           <ion-item>
 
@@ -293,7 +294,7 @@
                 <ion-col>
                   <ion-item>
                     <ion-label>Tipo: </ion-label>
-                    <ion-select formControlName="powerSupplytype">
+                    <ion-select interface="popover" formControlName="powerSupplytype">
                       <ion-select-option value="AT">AT</ion-select-option>
                       <ion-select-option value="ATX">ATX</ion-select-option>
                     </ion-select>
@@ -346,7 +347,7 @@
                 <ion-col>
                   <ion-item>
                     <ion-label>Tipo: </ion-label>
-                    <ion-select formControlName="motherboardtype">
+                    <ion-select interface="popover" formControlName="motherboardtype">
                       <ion-select-option value="Estándar ATX">Estándar ATX</ion-select-option>
                       <ion-select-option value="Micro ATX">Micro ATX</ion-select-option>
                       <ion-select-option value="Mini ITX">Mini ITX</ion-select-option>
@@ -364,9 +365,8 @@
         </ion-col>
       </ion-row>
 
-
-
-      <ion-row>
+      <ion-row
+        *ngIf="this.computerForm.controls['tipoEquipo'].value=='pc' || this.computerForm.controls['tipoEquipo'].value=='laptop' || this.computerForm.controls['tipoEquipo'].value=='aio'">
         <ion-col>
           <ion-item>
 
@@ -402,7 +402,7 @@
                 <ion-col>
                   <ion-item>
                     <ion-label>Tipo: </ion-label>
-                    <ion-select formControlName="cabinettype">
+                    <ion-select interface="popover" formControlName="cabinettype">
                       <ion-select-option value="FullTower">FullTower</ion-select-option>
                       <ion-select-option value="MidTower">MidTower</ion-select-option>
                       <ion-select-option value="MiniTower">MiniTower</ion-select-option>
@@ -454,7 +454,9 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row>
+
+      <ion-row
+        *ngIf="this.computerForm.controls['tipoEquipo'].value=='pc' || this.computerForm.controls['tipoEquipo'].value=='laptop' || this.computerForm.controls['tipoEquipo'].value=='aio'">
         <ion-col>
           <ion-item>
             <ion-grid>
@@ -524,6 +526,78 @@
           </ion-item>
         </ion-col>
 
+      </ion-row>
+
+      <ion-row *ngIf="this.computerForm.controls['tipoEquipo'].value=='printer'">
+        <ion-col>
+          <ion-item>
+            <ion-grid>
+              <ion-row>
+                <h3>Características de la Impresora</h3>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo: </ion-label>
+                    <ion-select interface="popover" formControlName="printertype">
+                      <ion-select-option value="laser">Láser</ion-select-option>
+                      <ion-select-option value="colorlaser">Láser a Color</ion-select-option>
+                      <ion-select-option value="multifunction">Multifuncional</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Tipo de tinta: </ion-label>
+                    <ion-select interface="popover" formControlName="printerinktype">
+                      <ion-select-option value="toner">Toner</ion-select-option>
+                      <ion-select-option value="cartuchos">Cartuchos</ion-select-option>
+                      <ion-select-option value="cartuchosrellenables">Cartuchos Rellenables</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="printername"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="this.computerForm.controls['tipoEquipo'].value=='projector'">
+        <ion-col>
+          <ion-item>
+            <ion-grid>
+              <ion-row>
+                <h3>Foco del proyector</h3>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Marca: </ion-label>
+                    <ion-input formControlName="projectorfocusname"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Voltaje: </ion-label>
+                    <ion-input formControlName="projectorfocusvolt" type="number"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item>
+                    <ion-label>Base: </ion-label>
+                    <ion-input formControlName="projectorfocusbase"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-col>
       </ion-row>
 
     </ion-grid>

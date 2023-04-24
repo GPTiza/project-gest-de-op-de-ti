@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ComputerService } from 'src/app/services/computer.service';
 import { UserService } from 'src/app/services/user.service';
 import { InventoryDetailPage } from './inventory-detail/inventory-detail.page';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-inventory',
@@ -15,21 +16,42 @@ import { InventoryDetailPage } from './inventory-detail/inventory-detail.page';
 export class InventoryPage implements OnInit {
 
   computers: Computer[] = [];
+  filteredComputers: Computer[] = [];
+  txtSearch = "";
+  department = "Todos"
+  responsable = "Todos"
+  responsables: User[] = []
+  type = "Todos"
+  initialDate= new Date().toISOString().substring(0,10)
+  finishDate= new Date().toISOString().substring(0,10)
+  today=new Date().toISOString().substring(0,10)
+  types = new Map<string, string>([
+    ["pc", "Computadora de Escritorio"],
+    ["laptop", "Laptop"],
+    ["aio", "All in one"],
+    ["printer", "Impresora"],
+    ["projector", "Proyector"]
+  ]);
 
-  constructor(private computerService: ComputerService, private userService: UserService,private authService:AuthService,private router:Router, public modalCtrl: ModalController) { }
+  constructor(private computerService: ComputerService, private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
-    if(!this.authService.getActualUser())
-        this.router.navigateByUrl("login");
+    if (!this.authService.getActualUser())
+      this.router.navigateByUrl("login");
     this.computerService.getAll().subscribe(c => {
       this.computers = c
+      c.forEach((comp => {
+        if (this.responsables.filter(r => r.id == comp.responsable.id).length == 0) {
+          this.responsables.push(comp.responsable);
+        }
+      }))
     })
   }
 
   async edit(c: Computer) {
     const modal = await this.modalCtrl.create({
       component: InventoryDetailPage,
-      componentProps: {modal:this.modalCtrl, computer: c },
+      componentProps: { modal: this.modalCtrl, computer: c },
       cssClass: 'inventoryModal',
 
       // backdropDismiss: false,
@@ -44,7 +66,7 @@ export class InventoryPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: InventoryDetailPage,
       cssClass: 'inventoryModal',
-      componentProps:{modal:this.modalCtrl}
+      componentProps: { modal: this.modalCtrl }
       // backdropDismiss: false,
     });
 
@@ -58,6 +80,80 @@ export class InventoryPage implements OnInit {
       this.computerService.del(id).then(r => {
         alert("Se ha eliminado el dispositivo");
       })
+    }
+  }
+
+
+  changeDepartment(e: any) {
+    this.department = e.detail.value;
+    this.filterComputers()
+  }
+
+  changeResponsable(e: any) {
+    this.responsable = e.detail.value;
+    this.filterComputers()
+  }
+
+  changeType(e: any) {
+    this.type = e.detail.value;
+    this.filterComputers()
+  }
+
+  changeSearch(e: any) {
+    this.txtSearch = e.detail.value;
+    this.filterComputers()
+  }
+
+  changeInitialDate(e:any){
+    this.initialDate = e.detail.value;
+    this.filterComputers()
+  }
+
+  changeFinishDate(e:any){
+    this.finishDate = e.detail.value;
+    this.filterComputers()
+  }
+
+  compareWith(a: any, b: any) {
+    return a == b
+  }
+
+  filterComputers() {
+    this.filteredComputers = [];
+    let inFilter = false;
+    if (this.department != "Todos") {
+      this.filteredComputers = this.computers.filter(u => u.department == this.department);
+      inFilter = true
+    }
+    if (this.responsable != "Todos") {
+      let filter: Computer[] = [];
+      if (!inFilter) {
+        filter = this.computers;
+        inFilter = true;
+      }
+      else
+        filter = this.filteredComputers;
+      this.filteredComputers = filter.filter(u => u.responsable.id == this.responsable);
+    }
+    if (this.type != "Todos") {
+      let filter: Computer[] = [];
+      if (!inFilter) {
+        filter = this.computers;
+        inFilter = true;
+      }
+      else
+        filter = this.filteredComputers;
+
+      this.filteredComputers = filter.filter(u => u.tipoEquipo == this.type);
+    }
+    if (this.txtSearch.replace(" ", "").length > 0) {
+      let filter: Computer[] = [];
+      if (!inFilter)
+        filter = this.computers;
+      else
+        filter = this.filteredComputers;
+      let txt = this.txtSearch;
+      this.filteredComputers = filter.filter(u => u.name.toLowerCase().includes(txt.toLowerCase()) || u.brand.toLowerCase().includes(txt.toLowerCase()));
     }
   }
 

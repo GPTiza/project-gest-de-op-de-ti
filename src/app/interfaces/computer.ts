@@ -23,5 +23,13 @@ export interface Computer {
     processador: Component,
     cabinet: Component,
     mouse:Component,
-    keyboard:Component
+    keyboard:Component,
+
+    printertype:string,
+    printerinktype:string,
+    printername:string,
+
+    projectorfocusname: string,
+    projectorfocusvolt: number,
+    projectorfocusbase: string,
 }

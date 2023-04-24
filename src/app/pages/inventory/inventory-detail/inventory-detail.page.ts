@@ -19,10 +19,10 @@ export class InventoryDetailPage implements OnInit {
   users: User[] = [];
   selectedUser!: User;
 
-  aulasFiltered=[];
-  edificiosSistemas=["EA","EB","EC","CC"]
-  aulasClases=["A1","A2","A3","A4","A5","A6","A7","A8"];
-  aulasCC=["BD","PW","DM","DS"]
+  aulasFiltered = [];
+  edificiosSistemas = ["EA", "EB", "EC", "CC"]
+  aulasClases = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"];
+  aulasCC = ["BD", "PW", "DM", "DS"]
 
   computerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -32,8 +32,8 @@ export class InventoryDetailPage implements OnInit {
     latitude: new FormControl(''),
     longitude: new FormControl(''),
     red: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    responsable: new FormControl(this.userService.getExampleUser(), [Validators.required]),
-    
+    responsable: new FormControl(this.userService.getExampleUser().name + " " + this.userService.getExampleUser().lastname, [Validators.required]),
+
     uso: new FormControl('', [Validators.required, Validators.minLength(6)]),
     tipoCompra: new FormControl('', [Validators.required, Validators.minLength(6)]),
     tipoEquipo: new FormControl('', [Validators.required]),
@@ -41,45 +41,53 @@ export class InventoryDetailPage implements OnInit {
     edificio: new FormControl('', [Validators.required]),
     aula: new FormControl('', [Validators.required]),
 
-    diskname: new FormControl('', [Validators.required]),
-    disktype: new FormControl('', [Validators.required]),
-    diskcapacity: new FormControl(0, [Validators.required]),
+    diskname: new FormControl('', []),
+    disktype: new FormControl('', []),
+    diskcapacity: new FormControl(0, []),
     diskwarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    diskserieNumber: new FormControl('', [Validators.required]),
+    diskserieNumber: new FormControl('', []),
 
-    ramname: new FormControl('', [Validators.required]),
-    ramtype: new FormControl('', [Validators.required]),
-    ramcapacity: new FormControl(0, [Validators.required]),
+    ramname: new FormControl('', []),
+    ramtype: new FormControl('', []),
+    ramcapacity: new FormControl(0, []),
     ramwarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    ramserieNumber: new FormControl('', [Validators.required]),
+    ramserieNumber: new FormControl('', []),
 
-    powerSupplyname: new FormControl('', [Validators.required]),
-    powerSupplytype: new FormControl('', [Validators.required]),
-    powerSupplycapacity: new FormControl(0, [Validators.required]),
+    powerSupplyname: new FormControl('', []),
+    powerSupplytype: new FormControl('', []),
+    powerSupplycapacity: new FormControl(0, []),
     powerSupplywarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    powerSupplyserieNumber: new FormControl('', [Validators.required]),
+    powerSupplyserieNumber: new FormControl('', []),
 
-    motherboardname: new FormControl('', [Validators.required]),
-    motherboardtype: new FormControl('', [Validators.required]),
+    motherboardname: new FormControl('', []),
+    motherboardtype: new FormControl('', []),
     motherboardwarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    motherboardserieNumber: new FormControl('', [Validators.required]),
+    motherboardserieNumber: new FormControl('', []),
 
-    processadorname: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    processadorname: new FormControl('', []),
     processadorwarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    processadorserieNumber: new FormControl('', [Validators.required]),
+    processadorserieNumber: new FormControl('', []),
 
-    cabinetname: new FormControl('', [Validators.required]),
-    cabinettype: new FormControl('', [Validators.required]),
+    cabinetname: new FormControl('', []),
+    cabinettype: new FormControl('', []),
     cabinetwarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    cabinetserieNumber: new FormControl('', [Validators.required]),
+    cabinetserieNumber: new FormControl('', []),
 
-    mousename: new FormControl('', [Validators.required]),
+    mousename: new FormControl('', []),
     mousewarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    mouseserieNumber: new FormControl('', [Validators.required]),
+    mouseserieNumber: new FormControl('', []),
 
-    keyboardname: new FormControl('', [Validators.required]),
+    keyboardname: new FormControl('', []),
     keyboardwarrantyExpirationDate: new FormControl(new Date().toISOString().split('T')[0]),
-    keyboardserieNumber: new FormControl('', [Validators.required]),
+    keyboardserieNumber: new FormControl('', []),
+
+    printertype: new FormControl('', []),
+    printerinktype: new FormControl('', []),
+    printername: new FormControl('', []),
+
+    projectorfocusname: new FormControl('', []),
+    projectorfocusvolt: new FormControl(0, []),
+    projectorfocusbase: new FormControl('', []),
   });
 
   constructor(private params: NavParams, private userService: UserService, private computerService: ComputerService) {
@@ -106,19 +114,19 @@ export class InventoryDetailPage implements OnInit {
       this.computerForm.setValue({
         name: c.name,
         brand: c.brand,
-        date:c.date,
+        date: c.date,
         department: c.department,
         latitude: c.location ? c.location.latitude : 1,
         longitude: c.location ? c.location.longitude : 1,
         red: c.red,
-        responsable: c.responsable,
+        responsable: c.responsable.id,
 
-        uso:c.uso,
+        uso: c.uso,
         tipoCompra: c.tipoCompra,
-        tipoEquipo:c.tipoEquipo,
-        so:c.so,
-        edificio:c.edificio,
-        aula:c.aula,
+        tipoEquipo: c.tipoEquipo,
+        so: c.so,
+        edificio: c.edificio,
+        aula: c.aula,
 
         diskname: c.disk.name,
         disktype: c.disk.type ? c.disk.type : '',
@@ -158,7 +166,15 @@ export class InventoryDetailPage implements OnInit {
 
         keyboardname: c.keyboard.name,
         keyboardwarrantyExpirationDate: new Date().toISOString().split('T')[0],// keyboard.toISOString().split('T')[0],
-        keyboardserieNumber: c.keyboard.serieNumber
+        keyboardserieNumber: c.keyboard.serieNumber,
+
+        printertype: c.printertype,
+        printerinktype: c.printerinktype,
+        printername: c.printername,
+        
+    projectorfocusname: c.projectorfocusname,
+    projectorfocusvolt: c.projectorfocusvolt,
+    projectorfocusbase: c.projectorfocusbase,
       });
     }
   }
@@ -197,6 +213,12 @@ export class InventoryDetailPage implements OnInit {
       so: this.computerForm.controls['so'].value!,
       edificio: this.computerForm.controls['edificio'].value!,
       aula: this.computerForm.controls['aula'].value!,
+      printertype: this.computerForm.controls['printertype'].value!,
+      printerinktype: this.computerForm.controls['printerinktype'].value!,
+      printername: this.computerForm.controls['printername'].value!,
+      projectorfocusname: this.computerForm.controls['projectorfocusname'].value!,
+      projectorfocusvolt: this.computerForm.controls['projectorfocusvolt'].value!,
+      projectorfocusbase: this.computerForm.controls['projectorfocusbase'].value!,
     }
     if (this.id.length > 0)
       this.computerService.put(c).then(r => {
@@ -206,7 +228,7 @@ export class InventoryDetailPage implements OnInit {
       this.computerService.add(c).then(r => {
         alert('Se ha agregado el dispositivo');
       });
-      this.params.get('modal').dismiss();
+    this.params.get('modal').dismiss();
   }
 
   getComponent(name: any) {

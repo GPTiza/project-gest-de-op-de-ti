@@ -14,12 +14,16 @@ import { NewPage } from './new/new.page';
 export class UsersPage implements OnInit {
 
   users: User[] = [];
+  filteredUsers: User[] = [];
+  txtSearch = "";
+  department = "Todos"
+  type = -1
 
-  constructor(private userService: UserService,private authService:AuthService,private router:Router, public modalCtrl: ModalController) { }
+  constructor(private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
-    if(!this.authService.getActualUser())
-        this.router.navigateByUrl("login");
+    if (!this.authService.getActualUser())
+      this.router.navigateByUrl("login");
     this.userService.getAll().subscribe(u => {
       this.users = u;
     })
@@ -28,7 +32,7 @@ export class UsersPage implements OnInit {
   async edit(u: User) {
     const modal = await this.modalCtrl.create({
       component: NewPage,
-      componentProps: {modal:this.modalCtrl, user: u },
+      componentProps: { modal: this.modalCtrl, user: u },
       // cssClass: 'setting-modal',
       // backdropDismiss: false,
     });
@@ -41,7 +45,7 @@ export class UsersPage implements OnInit {
   async add() {
     const modal = await this.modalCtrl.create({
       component: NewPage,
-      componentProps:{modal:this.modalCtrl}
+      componentProps: { modal: this.modalCtrl }
       // cssClass: 'setting-modal',
       // backdropDismiss: false,
     });
@@ -55,6 +59,54 @@ export class UsersPage implements OnInit {
       this.userService.del(id).then(r => {
         alert("Se ha eliminado el usuario");
       })
+    }
+  }
+
+  changeDepartment(e: any) {
+    this.department = e.detail.value;
+    this.filterUsers()
+  }
+
+  changeType(e: any) {
+    this.type = e.detail.value;
+    this.filterUsers()
+  }
+
+  changeSearch(e: any) {
+    this.txtSearch = e.detail.value;
+    this.filterUsers()
+  }
+
+  compareWith(a: any, b: any) {
+    return a == b
+  }
+
+  filterUsers() {
+    this.filteredUsers = [];
+    let inFilter = false;
+    if (this.department != "Todos") {
+      this.filteredUsers = this.users.filter(u => u.department == this.department);
+      inFilter = true
+    }
+    if (this.type >= 0) {
+      let filter: User[] = [];
+      if (!inFilter) {
+        filter = this.users;
+        inFilter = true;
+      }
+      else
+        filter = this.filteredUsers;
+
+      this.filteredUsers = filter.filter(u => u.type == this.type);
+    }
+    if (this.txtSearch.replace(" ", "").length > 0) {
+      let filter: User[] = [];
+      if (!inFilter)
+        filter = this.users;
+      else
+        filter = this.filteredUsers;
+      let txt = this.txtSearch;
+      this.filteredUsers = filter.filter(u => u.name.toLowerCase().includes(txt.toLowerCase()) || u.lastname.toLowerCase().includes(txt.toLowerCase()) || u.phone.toLowerCase().includes(txt.toLowerCase()) || u.email.toLowerCase().includes(txt.toLowerCase()));
     }
   }
 

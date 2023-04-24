@@ -9,15 +9,74 @@
 
 <ion-content>
   <ion-grid>
+    <ion-row class="settings">
+      <ion-col size="4">
+        <ion-searchbar [(ngModel)]="txtSearch" (ionChange)="changeSearch($event)"></ion-searchbar></ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Responsable: </ion-label>
+          <ion-select [(ngModel)]="responsable" interface="popover" [compareWith]="compareWith"
+            (ionChange)="changeResponsable($event)">
+            <ion-select-option value="Todos">Todos</ion-select-option>
+            <ion-select-option *ngFor="let u of responsables" value="u.id">{{u.name}} {{u.lastname}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="2">
+        <ion-item>
+          <ion-label>Departamento: </ion-label>
+          <ion-select [(ngModel)]="department" interface="popover" [compareWith]="compareWith"
+            (ionChange)="changeDepartment($event)">
+            <ion-select-option value="Todos">Todos</ion-select-option>
+            <ion-select-option>Prueba</ion-select-option>
+            <ion-select-option>Sistemas</ion-select-option>
+            <ion-select-option>Bioquimica</ion-select-option>
+            <ion-select-option>Mecánica</ion-select-option>
+            <ion-select-option>Ciencias Básicas</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="2">
+        <ion-item>
+          <ion-label>Tipo: </ion-label>
+          <ion-select [(ngModel)]="type" interface="popover" [compareWith]="compareWith"
+            (ionChange)="changeType($event)">
+            <ion-select-option value="Todos">Todos</ion-select-option>
+            <ion-select-option value="pc">Computadora de Escritorio</ion-select-option>
+            <ion-select-option value="laptop">Laptop</ion-select-option>
+            <ion-select-option value="aio">All in one</ion-select-option>
+            <ion-select-option value="printer">Impresora</ion-select-option>
+            <ion-select-option value="projector">Proyector</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Fecha de Inicio: </ion-label>
+          <ion-input [(ngModel)]="initialDate" type="date" [max]="finishDate" (ionChange)="changeInitialDate($event)"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Fecha de Fin: </ion-label>
+          <ion-input [(ngModel)]="finishDate" type="date" [min]="initialDate" [max]="today" (ionChange)="changeFinishDate($event)"></ion-input>
+        </ion-item>
+      </ion-col>
+
+    </ion-row>
+    <ion-row *ngIf="(filteredComputers.length==0 && (txtSearch.length>0 || department!='Todos' || responsable!='Todos' || type!='Todos'))">No se han encontrado resultados con esos filtros.</ion-row>
     <ion-row>
       <ion-col>Nombre</ion-col>
       <ion-col>Departamento</ion-col>
+      <ion-col>Tipo</ion-col>
       <ion-col>Responsable</ion-col>
       <ion-col>Acciones</ion-col>
     </ion-row>
-    <ion-row *ngFor="let computer of computers">
+    <ion-row *ngFor="let computer of (txtSearch.length>0 || department!='Todos' || responsable!='Todos' || type!='Todos')?filteredComputers:computers">
       <ion-col>{{computer.name}}</ion-col>
       <ion-col>{{computer.department}}</ion-col>
+      <ion-col>{{types.get(computer.tipoEquipo)}}</ion-col>
       <ion-col>{{computer.responsable.name}} {{computer.responsable.lastname}}</ion-col>
       <ion-col>
         <ion-button color="danger" (click)="del(computer.id)"><ion-icon name="trash"></ion-icon></ion-button>

@@ -16,17 +16,19 @@ export class ComputerService {
   public add(c: Computer) {
     let id = this.db.createId();
     return this.db.collection("computers").doc(id).set({
-      id:id,
+      id: id,
+      brand: c.brand,
       name: c.name,
+      date: c.date,
       department: c.department,
       location: c.location,
       red: c.red,
-      uso:c.uso,
+      uso: c.uso,
       tipoCompra: c.tipoCompra,
-      tipoEquipo:c.tipoEquipo,
-      so:c.so,
-      edificio:c.edificio,
-      aula:c.aula,
+      tipoEquipo: c.tipoEquipo,
+      so: c.so,
+      edificio: c.edificio,
+      aula: c.aula,
       responsable: c.responsable,
       disk: c.disk,
       ram: c.ram,
@@ -36,6 +38,14 @@ export class ComputerService {
       cabinet: c.cabinet,
       mouse: c.mouse,
       keyboard: c.keyboard,
+
+      printertype: c.printertype,
+      printerinktype: c.printerinktype,
+      printername: c.printername,
+
+      projectorfocusname: c.projectorfocusname,
+      projectorfocusvolt: c.projectorfocusvolt,
+      projectorfocusbase: c.projectorfocusbase,
       creationDate: new Date()
     })
   }
@@ -47,12 +57,12 @@ export class ComputerService {
       location: c.location,
       red: c.red,
       responsable: c.responsable,
-      uso:c.uso,
+      uso: c.uso,
       tipoCompra: c.tipoCompra,
-      tipoEquipo:c.tipoEquipo,
-      so:c.so,
-      edificio:c.edificio,
-      aula:c.aula,
+      tipoEquipo: c.tipoEquipo,
+      so: c.so,
+      edificio: c.edificio,
+      aula: c.aula,
       disk: c.disk,
       ram: c.ram,
       powerSupply: c.powerSupply,
@@ -61,6 +71,14 @@ export class ComputerService {
       cabinet: c.cabinet,
       mouse: c.mouse,
       keyboard: c.keyboard,
+
+      printertype: c.printertype,
+      printerinktype: c.printerinktype,
+      printername: c.printername,
+
+      projectorfocusname: c.projectorfocusname,
+      projectorfocusvolt: c.projectorfocusvolt,
+      projectorfocusbase: c.projectorfocusbase,
     }).then(r => {
       return r;
     })
@@ -95,18 +113,18 @@ export class ComputerService {
     let computer: Computer = {
       id: "1",
       name: 'Ejemplo',
-      brand:'Ejemplo',
-      date:new Date(),
+      brand: 'Ejemplo',
+      date: new Date(),
       department: user.department,
       location: undefined,
       red: 'Ejemplo',
       responsable: user,
-      uso:'Docente',
+      uso: 'Docente',
       tipoCompra: 'Comprada',
-      tipoEquipo:'PC',
-      so:'Windows',
-      edificio:"EB",
-      aula:"A3",
+      tipoEquipo: 'PC',
+      so: 'Windows',
+      edificio: "EB",
+      aula: "A3",
       disk: this.getComponentExample(),
       ram: this.getComponentExample(),
       powerSupply: this.getComponentExample(),
@@ -114,7 +132,13 @@ export class ComputerService {
       cabinet: this.getComponentExample(),
       mouse: this.getComponentExample(),
       keyboard: this.getComponentExample(),
-      processador:  this.getComponentExample(),
+      processador: this.getComponentExample(),
+      printertype: 'Ejemplo',
+      printerinktype: 'Ejemplo',
+      printername: 'Ejemplo',
+      projectorfocusname: 'Ejemplo',
+      projectorfocusvolt: 0,
+      projectorfocusbase: 'Ejemplo',
     };
     return computer;
   }

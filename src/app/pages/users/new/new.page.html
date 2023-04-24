@@ -37,7 +37,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Género: </ion-label>
-            <ion-select formControlName="isMale">
+            <ion-select  interface="popover" formControlName="isMale">
               <ion-select-option [value]="true">Masculino</ion-select-option>
               <ion-select-option [value]="false">Femenino</ion-select-option>
             </ion-select>
@@ -61,7 +61,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Tipo: </ion-label>
-            <ion-select formControlName="type">
+            <ion-select  interface="popover" formControlName="type">
               <ion-select-option value="0">Admin</ion-select-option>
               <ion-select-option value="1">Técnico</ion-select-option>
               <ion-select-option value="2">Jefe del Taller</ion-select-option>
