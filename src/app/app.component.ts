@@ -9,7 +9,10 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  loggedUserType=4
   constructor(private router:Router, private menuCtrl:MenuController, private authService:AuthService) {
+    if(this.authService.getActualUser())
+    this.loggedUserType=this.authService.getActualUser()['type'];
   }
 
   goUsers(){

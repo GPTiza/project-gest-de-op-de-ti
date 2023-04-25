@@ -601,7 +601,7 @@
       </ion-row>
 
     </ion-grid>
-    <div class="center">
+    <div class="center" *ngIf="!computerForm.disabled">
       <ion-button color="success" [disabled]="!computerForm.valid" (click)="save()">Guardar</ion-button>
     </div>
   </form>

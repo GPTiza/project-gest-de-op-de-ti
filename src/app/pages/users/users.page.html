@@ -10,9 +10,9 @@
 <ion-content>
   <ion-grid>
     <ion-row class="settings">
-      <ion-col size="4">
+      <ion-col size="6">
         <ion-searchbar [(ngModel)]="txtSearch" (ionChange)="changeSearch($event)"></ion-searchbar></ion-col>
-      <ion-col size="2">
+      <ion-col size="3">
         <ion-item>
           <ion-label>Departamento: </ion-label>
           <ion-select [(ngModel)]="department" interface="popover" [compareWith]="compareWith"
@@ -26,15 +26,15 @@
           </ion-select>
         </ion-item>
       </ion-col>
-      <ion-col size="2">
+      <ion-col size="3">
         <ion-item>
           <ion-label>Tipo: </ion-label>
           <ion-select [(ngModel)]="type" interface="popover" [compareWith]="compareWith"
             (ionChange)="changeType($event)">
             <ion-select-option value="-1">Todos</ion-select-option>
             <ion-select-option value="0">Admin</ion-select-option>
-            <ion-select-option value="1">Técnico</ion-select-option>
-            <ion-select-option value="2">Jefe del Taller</ion-select-option>
+            <ion-select-option value="1">Jefe del Taller</ion-select-option>
+            <ion-select-option value="2">Técnico</ion-select-option>
             <ion-select-option value="3">Jefe de Departamento</ion-select-option>
             <ion-select-option value="4">Secretaria</ion-select-option>
           </ion-select>
@@ -49,7 +49,7 @@
       <ion-col>Correo</ion-col>
       <ion-col>Departamento</ion-col>
       <ion-col>Horario</ion-col>
-      <ion-col>Acciones</ion-col>
+      <ion-col *ngIf="loggedUserType<2">Acciones</ion-col>
     </ion-row>
     <ion-row *ngFor="let user of ((txtSearch.length>0 || department!='Todos' || type>=0)?filteredUsers:users)">
       <ion-col>{{user.name}}</ion-col>
@@ -58,7 +58,7 @@
       <ion-col>{{user.email}}</ion-col>
       <ion-col>{{user.department}}</ion-col>
       <ion-col>{{user.entryTime}} - {{user.departureTime}}</ion-col>
-      <ion-col>
+      <ion-col *ngIf="loggedUserType<2">
         <ion-button color="danger" (click)="delete(user.id)"><ion-icon name="trash"></ion-icon></ion-button>
         <ion-button color="warning" (click)="edit(user)"><ion-icon name="create"></ion-icon></ion-button>
       </ion-col>
@@ -66,7 +66,7 @@
   </ion-grid>
 </ion-content>
 
-<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+<ion-fab *ngIf="loggedUserType<2" slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button (click)="add()"><ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>

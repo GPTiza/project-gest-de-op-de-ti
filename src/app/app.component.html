@@ -7,9 +7,9 @@
     </ion-header>
     <ion-content>
       <ion-list>
-        <ion-item><ion-button expand="full" (click)="goUsers()">Usuarios</ion-button></ion-item>
-        <ion-item><ion-button expand="full" (click)="goInventory()">Inventario</ion-button></ion-item>
-        <ion-item><ion-button expand="full" (click)="goKnowledge()">Servicios</ion-button></ion-item>
+        <ion-item *ngIf="loggedUserType<2"><ion-button expand="full" (click)="goUsers()">Usuarios</ion-button></ion-item>
+        <ion-item *ngIf="loggedUserType<3"><ion-button expand="full" (click)="goInventory()">Inventario</ion-button></ion-item>
+        <ion-item *ngIf="loggedUserType<3"><ion-button expand="full" (click)="goKnowledge()">Servicios</ion-button></ion-item>
         <ion-item><ion-button expand="full" (click)="logout()" color="danger">Cerrar Sesión</ion-button></ion-item>
       </ion-list>
     </ion-content>

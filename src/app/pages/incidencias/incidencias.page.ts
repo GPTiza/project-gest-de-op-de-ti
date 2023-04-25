@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Computer } from 'src/app/interfaces/computer';
+import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ComputerService } from 'src/app/services/computer.service';
 import { UserService } from 'src/app/services/user.service';
-import { InventoryDetailPage } from './inventory-detail/inventory-detail.page';
-import { User } from 'src/app/interfaces/user';
+import { InventoryDetailPage } from '../inventory/inventory-detail/inventory-detail.page';
 
 @Component({
-  selector: 'app-inventory',
-  templateUrl: './inventory.page.html',
-  styleUrls: ['./inventory.page.scss'],
+  selector: 'app-incidencias',
+  templateUrl: './incidencias.page.html',
+  styleUrls: ['./incidencias.page.scss'],
 })
-export class InventoryPage implements OnInit {
+export class IncidenciasPage implements OnInit {
 
   computers: Computer[] = [];
   filteredComputers: Computer[] = [];

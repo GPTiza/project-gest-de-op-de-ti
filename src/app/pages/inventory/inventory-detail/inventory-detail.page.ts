@@ -92,6 +92,9 @@ export class InventoryDetailPage implements OnInit {
 
   constructor(private params: NavParams, private userService: UserService, private computerService: ComputerService) {
     if (params.get('computer')) {
+      if(!params.get('canEdit')){
+        this.computerForm.disable()
+      }
       let c: Computer = params.get('computer');
       var disk = new Date(0);
       disk.setUTCSeconds(c.disk.warrantyExpirationDate['seconds']);

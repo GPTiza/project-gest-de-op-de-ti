@@ -18,12 +18,14 @@ export class UsersPage implements OnInit {
   txtSearch = "";
   department = "Todos"
   type = -1
+  loggedUserType=4
 
   constructor(private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
     if (!this.authService.getActualUser())
       this.router.navigateByUrl("login");
+    this.loggedUserType=this.authService.getActualUser()['type'];
     this.userService.getAll().subscribe(u => {
       this.users = u;
     })

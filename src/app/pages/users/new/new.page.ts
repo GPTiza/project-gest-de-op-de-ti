@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NavParams } from '@ionic/angular';
 import { User } from 'src/app/interfaces/user';
+import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,6 +13,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class NewPage implements OnInit {
   id=""
+  loggedUserType=4
 
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -27,7 +30,7 @@ export class NewPage implements OnInit {
     departureTime: new FormControl('', [Validators.required]),
   });
 
-  constructor(private params: NavParams,private userService:UserService) {
+  constructor(private params: NavParams,private userService:UserService, private authService: AuthService, private router: Router) {
     if(params.get('user')){
       let u:User=params.get('user');
       var d = new Date(0);
@@ -51,6 +54,9 @@ export class NewPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loggedUserType=this.authService.getActualUser()['type'];
+    if(this.loggedUserType<2)
+      this.params.get('modal').dismiss();
   }
 
   save(){
