@@ -33,7 +33,6 @@ export class AuthService {
   }
 
   saveUser(u: User) {
-    console.log(JSON.stringify(u))
     localStorage.setItem('incitecUser', JSON.stringify(u))
   }
 
@@ -43,10 +42,8 @@ export class AuthService {
 
   getActualUser() {
     let u = localStorage.getItem('incitecUser');
-    console.log(u)
     if (!u) return null;
     let user = JSON.parse(u!);
-    console.log(user)
     // if (!user['expiredTime']) return null;
     // if (user['expiredTime'] < Date.now()) return null;
     return user;

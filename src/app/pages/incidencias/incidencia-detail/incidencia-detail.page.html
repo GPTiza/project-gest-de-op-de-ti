@@ -1,9 +1,95 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>incidencia-detail</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <form [formGroup]="incidenciaForm" autocomplete="off">
+    <ion-grid>
+      <h1 class="center">Detalle de incidencia</h1>
 
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Aula: </ion-label>
+            <ion-input formControlName="aula"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Edificio: </ion-label>
+            <ion-input formControlName="edificio"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Descripción: </ion-label>
+            <ion-textarea formControlName="description"></ion-textarea>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Tipo: </ion-label>
+            <ion-select interface="popover" formControlName="type">
+              <ion-select-option value="pc">Computadora de Escritorio</ion-select-option>
+              <ion-select-option value="laptop">Laptop</ion-select-option>
+              <ion-select-option value="aio">All in one</ion-select-option>
+              <ion-select-option value="printer">Impresora</ion-select-option>
+              <ion-select-option value="projector">Proyector</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="loggedUserType<3 && status>=0">
+        <ion-col>
+          <ion-item>
+            <ion-label>Prioridad: </ion-label>
+            <ion-select interface="popover" formControlName="priority">
+              <ion-select-option value="0">Muy baja</ion-select-option>
+              <ion-select-option value="1">Baja</ion-select-option>
+              <ion-select-option value="2">Media</ion-select-option>
+              <ion-select-option value="3">Alta</ion-select-option>
+              <ion-select-option value="4">Muy alta</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="loggedUserType<3 && status>0">
+        <ion-col>
+          <ion-item>
+            <ion-label>Tecnico: </ion-label>
+            <ion-select interface="popover" formControlName="tecnico">
+              <ion-select-option *ngFor="let u of tecnicos" [value]="u.id">{{u.name}} {{u.lastname}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row *ngIf="loggedUserType<3 && (status==2 || status==5 || status==6  || status==7)">
+        <ion-col>
+          <ion-item>
+            <ion-label>Solicitud de Cambio: </ion-label>
+            <ion-textarea formControlName="solicitudCambio"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div class="center">
+        <ion-button *ngIf="loggedUserType>2" button [disabled]="!incidenciaForm.valid" color="success"
+          (click)="save()">Guardar</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==0" button color="success"
+          (click)="savePriority()">Guardar</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==0" button color="danger" (click)="cancel()">Rechazar Incidencia</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==1" button color="success"
+          (click)="saveTecnico()">Guardar</ion-button>
+        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)" button color="success" (click)="finish()">Terminar
+          Incidencia</ion-button>
+        <ion-button *ngIf="loggedUserType==2 && status==2" button (click)="solicitudCambio()">Enviar Solicitud de Cambio</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==5" button color="success"
+          (click)="aceptarCambios()">Aceptar Solicitud de Cambio</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==5" button color="danger" (click)="rechazarCambios()">Rechazar Solicitud de Cambio</ion-button>
+      </div>
+    </ion-grid>
+  </form>
 </ion-content>

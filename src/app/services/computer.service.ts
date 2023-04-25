@@ -109,6 +109,16 @@ export class ComputerService {
       }));
   }
 
+  public getByAulayEdificioyTipo(aula: string,edificio:string,tipo:string) {
+    return this.db.collection("computers",ref=>ref.where("aula","==",aula).where("edificio","==",edificio).where("tipoEquipo","==",tipo)).snapshotChanges().pipe(map(res => {
+      return res.map(a => {
+        const data = a.payload.doc.data() as Computer;
+        data.id = a.payload.doc.id;
+        return data;
+      })
+    }));
+  }
+
   public getComputerExample(user: User) {
     let computer: Computer = {
       id: "1",

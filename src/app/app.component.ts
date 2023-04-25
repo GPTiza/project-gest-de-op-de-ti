@@ -30,6 +30,11 @@ export class AppComponent {
     this.router.navigateByUrl('/knowledge')
   }
 
+  goIncidencias(){
+    this.menuCtrl.close()
+    this.router.navigateByUrl('/incidencias')
+  }
+
   logout(){
     this.menuCtrl.close()
     this.authService.deleteAuth();

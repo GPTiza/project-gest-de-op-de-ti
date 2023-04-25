@@ -23,7 +23,6 @@ export class KnowledgePage implements OnInit {
         this.router.navigateByUrl("login");
     this.serviceService.getAll().subscribe(c => {
       this.services = c
-      console.log(c)
     })
   }
 
