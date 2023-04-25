@@ -7,6 +7,7 @@ import { ComputerService } from 'src/app/services/computer.service';
 import { UserService } from 'src/app/services/user.service';
 import { InventoryDetailPage } from './inventory-detail/inventory-detail.page';
 import { User } from 'src/app/interfaces/user';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-inventory',
@@ -31,7 +32,7 @@ export class InventoryPage implements OnInit {
     ["projector", "Proyector"]
   ]);
 
-  constructor(private computerService: ComputerService, private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
+  constructor(private computerService: ComputerService, private alertservice:AlertService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
     if (!this.authService.getActualUser())
@@ -91,7 +92,7 @@ export class InventoryPage implements OnInit {
   del(id: string) {
     if (confirm("¿Está seguro que desea eliminar este dispositivo?")) {
       this.computerService.del(id).then(r => {
-        alert("Se ha eliminado el dispositivo");
+        this.alertservice.successful("Se ha eliminado el dispositivo");
       })
     }
   }

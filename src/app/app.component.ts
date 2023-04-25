@@ -9,15 +9,12 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  loggedUserType = 4
-  name = ""
   types=["Administrador","Jefe de Taller","Técnico","Jefe de dpto","Secretaria"];
-  constructor(private router: Router, private menuCtrl: MenuController, private authService: AuthService) {
-    let u=this.authService.getActualUser()
-    if (u) {
-      this.loggedUserType = u['type'];
-      this.name = u['name'] + ' ' + u['lastname'];
-    }
+
+  constructor(private router: Router, private menuCtrl: MenuController, public authService: AuthService) {
+  }
+
+  ngOnInit(){
   }
 
   goUsers() {
@@ -38,6 +35,11 @@ export class AppComponent {
   goIncidencias() {
     this.menuCtrl.close()
     this.router.navigateByUrl('/incidencias')
+  }
+
+  goReports() {
+    this.menuCtrl.close()
+    this.router.navigateByUrl('/resports')
   }
 
   logout() {

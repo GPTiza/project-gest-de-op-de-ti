@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NavParams } from '@ionic/angular';
 import { Service } from 'src/app/interfaces/service';
+import { AlertService } from 'src/app/services/alert.service';
 import { ServicesService } from 'src/app/services/services.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class KnowledgeDetailPage implements OnInit {
     time: new FormControl(0, [Validators.required]),
   });
 
-  constructor(private params: NavParams,private serviceService:ServicesService,) {
+  constructor(private params: NavParams,private serviceService:ServicesService,private alertService:AlertService) {
     if(params.get('service')){
       let s:Service=params.get('service');
       this.id=s.id;
@@ -44,11 +45,11 @@ export class KnowledgeDetailPage implements OnInit {
     };
     if(this.id.length>0)
       this.serviceService.put(u).then(()=>{
-        alert('Se ha actualizado el servicio');
+        this.alertService.successful('Se ha actualizado el servicio');
       });
     else
     this.serviceService.add(u).then(()=>{
-      alert('Se ha agregado el servicio');
+      this.alertService.successful('Se ha agregado el servicio');
     });
     this.params.get('modal').dismiss();
   }

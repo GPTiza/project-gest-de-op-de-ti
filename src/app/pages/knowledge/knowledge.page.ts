@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ServicesService } from 'src/app/services/services.service';
 import { UserService } from 'src/app/services/user.service';
 import { KnowledgeDetailPage } from './knowledge-detail/knowledge-detail.page';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-knowledge',
@@ -15,12 +16,13 @@ import { KnowledgeDetailPage } from './knowledge-detail/knowledge-detail.page';
 export class KnowledgePage implements OnInit {
 
   services:Service[]=[];
-
-  constructor(private serviceService: ServicesService, private userService: UserService,private authService:AuthService,private router:Router, public modalCtrl: ModalController) { }
+  loggedUserType=4
+  constructor(private serviceService: ServicesService,private alertService:AlertService,private authService:AuthService,private router:Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
-    if(!this.authService.getActualUser())
-        this.router.navigateByUrl("login");
+    if (!this.authService.getActualUser())
+      this.router.navigateByUrl("login");
+    this.loggedUserType=this.authService.getActualUser()['type'];
     this.serviceService.getAll().subscribe(c => {
       this.services = c
     })
@@ -56,7 +58,7 @@ export class KnowledgePage implements OnInit {
   delete(id: string) {
     if (confirm("¿Está seguro que desea eliminar este servicio?")) {
       this.serviceService.del(id).then(r => {
-        alert("Se ha eliminado el servicio");
+        this.alertService.successful("Se ha eliminado el servicio");
       })
     }
   }

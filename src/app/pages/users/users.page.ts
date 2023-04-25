@@ -5,6 +5,7 @@ import { User } from 'src/app/interfaces/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { NewPage } from './new/new.page';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-users',
@@ -20,7 +21,7 @@ export class UsersPage implements OnInit {
   type = -1
   loggedUserType=4
 
-  constructor(private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
+  constructor(private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController,private alertService:AlertService) { }
 
   ngOnInit() {
     if (!this.authService.getActualUser())
@@ -59,7 +60,7 @@ export class UsersPage implements OnInit {
 
     if (confirm("¿Está seguro que desea eliminar este usuario?")) {
       this.userService.del(id).then(r => {
-        alert("Se ha eliminado el usuario");
+        this.alertService.successful("Se ha eliminado el usuario");
       })
     }
   }

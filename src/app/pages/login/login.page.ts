@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 // import { AlertService } from 'src/app/services/alert.service';
@@ -21,12 +22,12 @@ export class LoginPage implements OnInit {
   loading = false;
 
   constructor(private authService:AuthService,private userService: UserService, private router: Router,
-    // private alertSrv: AlertService
+    private alertService: AlertService
     ) { }
 
   ngOnInit() {
     if(this.authService.isLogged())
-        this.router.navigateByUrl("users");
+        this.router.navigateByUrl("incidencias");
   }
 
   signIn() {
@@ -37,12 +38,12 @@ export class LoginPage implements OnInit {
           this.loading=false;
           this.authService.saveUser(user);
           // this.alertSrv.successful("Bienvenido " + user['name']);
-          alert("Bienvenido " + user['name']);
-          this.router.navigateByUrl("users");
+          this.alertService.successful("Bienvenido " + user['name']);
+          this.router.navigateByUrl("incidencias");
         }else{
           this.loading=false;
           // this.alertSrv.error("Ese usuario tiene problemas para iniciar sesión. Favor de contactar al administrador :c");
-          alert("Ese usuario tiene problemas para iniciar sesión. Favor de contactar al administrador :c");
+          this.alertService.successful("Ese usuario tiene problemas para iniciar sesión. Favor de contactar al administrador :c");
         }
       });
     }).catch((error:any) => {
@@ -58,7 +59,7 @@ export class LoginPage implements OnInit {
         txt = "Demasiados intentos fallidos"
       }
       // this.alertSrv.error(txt);
-      alert(txt);
+      this.alertService.error(txt);
     })
   }
 

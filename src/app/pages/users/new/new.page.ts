@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavParams } from '@ionic/angular';
 import { User } from 'src/app/interfaces/user';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -30,7 +31,7 @@ export class NewPage implements OnInit {
     departureTime: new FormControl('', [Validators.required]),
   });
 
-  constructor(private params: NavParams,private userService:UserService, private authService: AuthService, private router: Router) {
+  constructor(private params: NavParams,private userService:UserService, private authService: AuthService,private alertservice:AlertService) {
     if(params.get('user')){
       let u:User=params.get('user');
       var d = new Date(0);
@@ -77,11 +78,11 @@ export class NewPage implements OnInit {
     };
     if(this.id.length>0)
       this.userService.put(u).then(r=>{
-        alert('Se ha actualizado el usuario');
+        this.alertservice.successful('Se ha actualizado el usuario');
       });
     else
     this.userService.add(u).then(r=>{
-      alert('Se ha agregado el usuario');
+      this.alertservice.successful('Se ha agregado el usuario');
     });
     this.params.get('modal').dismiss();
   }

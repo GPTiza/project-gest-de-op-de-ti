@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NavParams } from '@ionic/angular';
 import { Incidencia } from 'src/app/interfaces/incidencia';
 import { User } from 'src/app/interfaces/user';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ComputerService } from 'src/app/services/computer.service';
 import { IncidenciasService } from 'src/app/services/incidencias.service';
@@ -30,7 +31,7 @@ export class IncidenciaDetailPage implements OnInit {
     solicitudCambio: new FormControl(''),
   });
 
-  constructor(private params: NavParams, private incidenciaService: IncidenciasService, private userService: UserService, private computerService: ComputerService, private authService: AuthService, private router: Router) {
+  constructor(private params: NavParams, private incidenciaService: IncidenciasService,private alertservice:AlertService, private userService: UserService, private computerService: ComputerService, private authService: AuthService, private router: Router) {
 
     if (!this.authService.getActualUser())
       this.router.navigateByUrl("login");
@@ -94,31 +95,31 @@ export class IncidenciaDetailPage implements OnInit {
           solicitudCambio: ''
         };
         this.incidenciaService.addSecreOJefeDpto(i).then(r => {
-          alert('Se ha agregado la incidencia');
+          this.alertservice.successful('Se ha agregado la incidencia');
         });
         this.params.get('modal').dismiss();
       } else {
-        alert("No existe un equipo de tipo " + type + " en el aula " + aula + " en el edificio " + edificio);
+        this.alertservice.error("No existe un equipo de tipo " + type + " en el aula " + aula + " en el edificio " + edificio);
       }
     })
   }
 
   savePriority() {
     this.incidenciaService.asignarPrioridad(this.id, this.incidenciaForm.controls['priority'].value!).then(r => {
-      alert("Se ha asignado la prioridad");
+      this.alertservice.successful("Se ha asignado la prioridad");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 
 
   cancel() {
     this.incidenciaService.rechazarIncidencias(this.id).then(r => {
-      alert("Se ha cancelado la incidencia");
+      this.alertservice.successful("Se ha cancelado la incidencia");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 
@@ -129,55 +130,55 @@ export class IncidenciaDetailPage implements OnInit {
         tec = t;
     })
     this.incidenciaService.asignarTecnico(this.id, tec!).then(r => {
-      alert("Se ha asignado al tecnico");
+      this.alertservice.successful("Se ha asignado al tecnico");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 
   finish() {
     this.incidenciaService.TerminarIncidencia(this.id).then(r => {
-      alert("Se ha terminado la incidencia");
+      this.alertservice.successful("Se ha terminado la incidencia");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 
   solicitudCambio() {
     this.incidenciaService.SolicitudCambio(this.id, this.incidenciaForm.controls['solicitudCambio'].value!).then(r => {
-      alert("Se ha creado la solicitud de cambio");
+      this.alertservice.successful("Se ha creado la solicitud de cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 
   aceptarCambios() {
     this.incidenciaService.aceptarSolicitudCambio(this.id).then(r => {
-      alert("Se ha aceptado la solicitud del cambio");
+      this.alertservice.successful("Se ha aceptado la solicitud del cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 
   rechazarCambios() {
     this.incidenciaService.rechazarSolicitudCambio(this.id).then(r => {
-      alert("Se ha rechazado la solicitud del cambio");
+      this.alertservice.successful("Se ha rechazado la solicitud del cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
   
   liberar() {
     this.incidenciaService.LiberarIncidencia(this.id).then((r: any) => {
-      alert("Se ha liberado la incidencia");
+      this.alertservice.successful("Se ha liberado la incidencia");
       this.params.get('modal').dismiss();
     }).catch((e: any) => {
-      alert("Ha ocurrido un error");
+      this.alertservice.error("Ha ocurrido un error");
     })
   }
 

@@ -6,17 +6,18 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list>
-        <ion-item *ngIf="loggedUserType<2"><ion-button expand="full" (click)="goUsers()">Usuarios</ion-button></ion-item>
-        <ion-item *ngIf="loggedUserType<3"><ion-button expand="full" (click)="goInventory()">Inventario</ion-button></ion-item>
-        <ion-item *ngIf="loggedUserType<3"><ion-button expand="full" (click)="goKnowledge()">Servicios</ion-button></ion-item>
+      <ion-list *ngIf="authService.getActualUser()">
+        <ion-item *ngIf="authService.getActualUser()!['type']<2"><ion-button expand="full" (click)="goUsers()">Usuarios</ion-button></ion-item>
+        <ion-item *ngIf="authService.getActualUser()!['type']<3"><ion-button expand="full" (click)="goInventory()">Inventario</ion-button></ion-item>
+        <ion-item *ngIf="authService.getActualUser()!['type']<3"><ion-button expand="full" (click)="goKnowledge()">Servicios</ion-button></ion-item>
         <ion-item><ion-button expand="full" (click)="goIncidencias()">Incidencias</ion-button></ion-item>
+        <ion-item *ngIf="authService.getActualUser()!['type']<2"><ion-button expand="full" (click)="goReports()">Reportes</ion-button></ion-item>
         <ion-item><ion-button expand="full" (click)="logout()" color="danger">Cerrar Sesión</ion-button></ion-item>
       </ion-list>
     </ion-content>
-    <ion-footer>
-      <h3>{{name}}</h3>
-      <h4>{{types[loggedUserType]}}</h4>
+    <ion-footer style="text-align: center;"  *ngIf="authService.getActualUser()">
+      <h3>{{authService.getActualUser()!['name']+' '+authService.getActualUser()!['lastname']}}</h3>
+      <h4>{{types[authService.getActualUser()!['type']]}}</h4>
     </ion-footer>
   </ion-menu>
   <ion-router-outlet id="main-content"></ion-router-outlet>

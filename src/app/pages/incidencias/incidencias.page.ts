@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { IncidenciasService } from 'src/app/services/incidencias.service';
 import { IncidenciaDetailPage } from './incidencia-detail/incidencia-detail.page';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-incidencias',
@@ -60,7 +61,7 @@ export class IncidenciasPage implements OnInit {
     [8, "Incidencia Rechazada"],
   ]);
 
-  constructor(private incidenciaservice: IncidenciasService, private userService: UserService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
+  constructor(private incidenciaservice: IncidenciasService, private alertService: AlertService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
     if (!this.authService.getActualUser())
@@ -127,7 +128,7 @@ export class IncidenciasPage implements OnInit {
   del(id: string) {
     if (confirm("¿Está seguro que desea eliminar este dispositivo?")) {
       this.incidenciaservice.del(id).then(r => {
-        alert("Se ha eliminado el dispositivo");
+        this.alertService.successful("Se ha eliminado el dispositivo");
       })
     }
   }

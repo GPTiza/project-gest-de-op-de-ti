@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Reportes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+
+      <ion-col size="6">
+        <ion-item>
+          <ion-label>Fecha de Inicio: </ion-label>
+          <ion-input [(ngModel)]="initialDate" type="date" [max]="finishDate"
+            (ionChange)="changeInitialDate($event)"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label>Fecha de Fin: </ion-label>
+          <ion-input [(ngModel)]="finishDate" type="date" [min]="initialDate" [max]="today"
+            (ionChange)="changeFinishDate($event)"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4">
+        <ion-card class="welcome-card">
+          <ion-card-header>
+            <ion-card-title>Número de Incidencias por Status</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #statusChart></canvas>
+          </ion-card-content>
+        </ion-card></ion-col>
+      <ion-col size="4">
+        <ion-card class="welcome-card">
+          <ion-card-header>
+            <ion-card-title>Número de Incidencias por Técnico</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #tecnicoChart></canvas>
+          </ion-card-content>
+        </ion-card></ion-col>
+      <ion-col size="4">
+        <ion-card class="welcome-card">
+          <ion-card-header>
+            <ion-card-title>Número de Incidencias por Usuario</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #userChart></canvas>
+          </ion-card-content>
+        </ion-card></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -14,7 +14,7 @@
       <ion-col>Solución</ion-col>
       <ion-col>Tiempo</ion-col>
       <ion-col>Fecha</ion-col>
-      <ion-col>Acciones</ion-col>
+      <ion-col *ngIf="loggedUserType<2">Acciones</ion-col>
     </ion-row>
     <ion-row *ngFor="let service of services">
       <ion-col>{{service.problem}}</ion-col>
@@ -22,8 +22,8 @@
       <ion-col>{{service.time}}</ion-col>
       <ion-col>{{service.date}}</ion-col>
       <ion-col>
-        <ion-button color="danger" (click)="delete(service.id)"><ion-icon name="trash"></ion-icon></ion-button>
-        <ion-button color="warning" (click)="edit(service)"><ion-icon name="create"></ion-icon></ion-button>
+        <ion-button *ngIf="loggedUserType<2" color="danger" (click)="delete(service.id)"><ion-icon name="trash"></ion-icon></ion-button>
+        <ion-button *ngIf="loggedUserType<2" color="warning" (click)="edit(service)"><ion-icon name="create"></ion-icon></ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

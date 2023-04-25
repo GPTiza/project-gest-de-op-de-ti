@@ -6,6 +6,7 @@ import { Component as comp } from 'src/app/interfaces/component';
 import { UserService } from 'src/app/services/user.service';
 import { ComputerService } from 'src/app/services/computer.service';
 import { User } from 'src/app/interfaces/user';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-inventory-detail',
@@ -90,7 +91,7 @@ export class InventoryDetailPage implements OnInit {
     projectorfocusbase: new FormControl('', []),
   });
 
-  constructor(private params: NavParams, private userService: UserService, private computerService: ComputerService) {
+  constructor(private params: NavParams, private userService: UserService, private computerService: ComputerService,private alertservice:AlertService) {
     if (params.get('computer')) {
       if(!params.get('canEdit')){
         this.computerForm.disable()
@@ -225,11 +226,11 @@ export class InventoryDetailPage implements OnInit {
     }
     if (this.id.length > 0)
       this.computerService.put(c).then(r => {
-        alert('Se ha actualizado el dispositivo');
+        this.alertservice.successful('Se ha actualizado el dispositivo');
       });
     else
       this.computerService.add(c).then(r => {
-        alert('Se ha agregado el dispositivo');
+        this.alertservice.successful('Se ha agregado el dispositivo');
       });
     this.params.get('modal').dismiss();
   }
