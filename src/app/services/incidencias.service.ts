@@ -52,13 +52,14 @@ export class IncidenciasService {
     })
   }
 
-  public IncidenciaCorregida(id: string) {
+  public TerminarIncidencia(id: string) {
     return this.db.collection("incidencias").doc(id).update({
-      status: 3
+      status: 3,
+      finishedDate: new Date(),
     })
   }
 
-  public TerminarIncidencia(id: string) {
+  public LiberarIncidencia(id: string) {
     return this.db.collection("incidencias").doc(id).update({
       status: 4,
       finishedDate: new Date(),

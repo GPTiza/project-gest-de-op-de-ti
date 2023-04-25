@@ -14,6 +14,10 @@
         <ion-item><ion-button expand="full" (click)="logout()" color="danger">Cerrar Sesión</ion-button></ion-item>
       </ion-list>
     </ion-content>
+    <ion-footer>
+      <h3>{{name}}</h3>
+      <h4>{{types[loggedUserType]}}</h4>
+    </ion-footer>
   </ion-menu>
   <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>

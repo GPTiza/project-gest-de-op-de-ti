@@ -9,33 +9,38 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  loggedUserType=4
-  constructor(private router:Router, private menuCtrl:MenuController, private authService:AuthService) {
-    if(this.authService.getActualUser())
-    this.loggedUserType=this.authService.getActualUser()['type'];
+  loggedUserType = 4
+  name = ""
+  types=["Administrador","Jefe de Taller","Técnico","Jefe de dpto","Secretaria"];
+  constructor(private router: Router, private menuCtrl: MenuController, private authService: AuthService) {
+    let u=this.authService.getActualUser()
+    if (u) {
+      this.loggedUserType = u['type'];
+      this.name = u['name'] + ' ' + u['lastname'];
+    }
   }
 
-  goUsers(){
+  goUsers() {
     this.menuCtrl.close()
     this.router.navigateByUrl('/users')
   }
 
-  goInventory(){
+  goInventory() {
     this.menuCtrl.close()
     this.router.navigateByUrl('/inventory')
   }
 
-  goKnowledge(){
+  goKnowledge() {
     this.menuCtrl.close()
     this.router.navigateByUrl('/knowledge')
   }
 
-  goIncidencias(){
+  goIncidencias() {
     this.menuCtrl.close()
     this.router.navigateByUrl('/incidencias')
   }
 
-  logout(){
+  logout() {
     this.menuCtrl.close()
     this.authService.deleteAuth();
     this.router.navigateByUrl('/login')

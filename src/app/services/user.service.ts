@@ -58,7 +58,7 @@ export class UserService {
   }
 
   public getAll() {
-    return this.db.collection("users").snapshotChanges().pipe(map(res => {
+    return this.db.collection("users").snapshotChanges().pipe(map((res:any) => {
       return res.map(a => {
         const data = a.payload.doc.data() as User;
         data.id = a.payload.doc.id;
@@ -68,7 +68,7 @@ export class UserService {
   }
 
   public getTecnicos() {
-    return this.db.collection("users",ref=>ref.where("type","==","2")).snapshotChanges().pipe(map(res => {
+    return this.db.collection("users",ref=>ref.where("type","==","2")).snapshotChanges().pipe(map((res:any) => {
       return res.map(a => {
         const data = a.payload.doc.data() as User;
         data.id = a.payload.doc.id;
@@ -79,7 +79,7 @@ export class UserService {
 
   public get(id: string) {
     return this.db.collection("users").doc(id).get()
-      .pipe(map(res => {
+      .pipe(map((res:any) => {
         const data = res.data() as User;
         data.id = id;
         return data;

@@ -171,5 +171,14 @@ export class IncidenciaDetailPage implements OnInit {
       alert("Ha ocurrido un error");
     })
   }
+  
+  liberar() {
+    this.incidenciaService.LiberarIncidencia(this.id).then((r: any) => {
+      alert("Se ha liberado la incidencia");
+      this.params.get('modal').dismiss();
+    }).catch((e: any) => {
+      alert("Ha ocurrido un error");
+    })
+  }
 
 }

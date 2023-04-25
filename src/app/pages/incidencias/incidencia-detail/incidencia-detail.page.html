@@ -80,15 +80,21 @@
           (click)="save()">Guardar</ion-button>
         <ion-button *ngIf="loggedUserType<2 && status==0" button color="success"
           (click)="savePriority()">Guardar</ion-button>
-        <ion-button *ngIf="loggedUserType<2 && status==0" button color="danger" (click)="cancel()">Rechazar Incidencia</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==0" button color="danger" (click)="cancel()">Rechazar
+          Incidencia</ion-button>
         <ion-button *ngIf="loggedUserType<2 && status==1" button color="success"
           (click)="saveTecnico()">Guardar</ion-button>
-        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)" button color="success" (click)="finish()">Terminar
+        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)" button color="success"
+          (click)="finish()">Terminar
           Incidencia</ion-button>
-        <ion-button *ngIf="loggedUserType==2 && status==2" button (click)="solicitudCambio()">Enviar Solicitud de Cambio</ion-button>
-        <ion-button *ngIf="loggedUserType<2 && status==5" button color="success"
-          (click)="aceptarCambios()">Aceptar Solicitud de Cambio</ion-button>
-        <ion-button *ngIf="loggedUserType<2 && status==5" button color="danger" (click)="rechazarCambios()">Rechazar Solicitud de Cambio</ion-button>
+        <ion-button *ngIf="loggedUserType==2 && status==2" button (click)="solicitudCambio()">Enviar Solicitud de
+          Cambio</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==5" button color="success" (click)="aceptarCambios()">Aceptar
+          Solicitud de Cambio</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==5" button color="danger" (click)="rechazarCambios()">Rechazar
+          Solicitud de Cambio</ion-button>
+        <ion-button *ngIf="loggedUserType<2 && status==3" button color="success" (click)="liberar()">Liberar
+          Incidencia</ion-button>
       </div>
     </ion-grid>
   </form>
