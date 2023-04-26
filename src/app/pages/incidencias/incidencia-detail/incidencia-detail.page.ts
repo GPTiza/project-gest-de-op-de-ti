@@ -25,7 +25,9 @@ export class IncidenciaDetailPage implements OnInit {
   aulas: string[][] = [];
   selectedAulas: string[] = []
   computers: Computer[] = []
-  i!:Incidencia;
+  computer!: Computer;
+  i!: Incidencia;
+  added = false;
   incidenciaForm = new FormGroup({
     aula: new FormControl('', [Validators.required]),
     edificio: new FormControl('', [Validators.required]),
@@ -40,7 +42,7 @@ export class IncidenciaDetailPage implements OnInit {
   });
 
   constructor(private params: NavParams, private incidenciaService: IncidenciasService, private alertservice: AlertService, private userService: UserService, private computerService: ComputerService, private authService: AuthService, private router: Router) {
-
+    this.added = false;
     if (!this.authService.getActualUser())
       this.router.navigateByUrl("login");
     this.loggedUserType = this.authService.getActualUser()['type'];
@@ -60,13 +62,15 @@ export class IncidenciaDetailPage implements OnInit {
         if (this.status > 0) {
           this.incidenciaForm.controls['priority'].disable()
           this.incidenciaForm.controls['clasificacion'].disable()
-          this.tecnicos = this.tecnicos.filter(t => t.clasificacion ==this.i.clasificacion);
-          this.tecnicos.sort((a,b)=>a.incidencias-b.incidencias);
+          this.tecnicos = this.tecnicos.filter(t => t.clasificacion == this.i.clasificacion);
+          this.tecnicos.sort((a, b) => a.incidencias - b.incidencias);
         }
         if (this.status > 1)
           this.incidenciaForm.controls['tecnico'].disable()
-        if (this.status > 4 || this.loggedUserType != 2)
+        if (this.status > 4 || this.loggedUserType != 2) {
+          this.incidenciaForm.controls['diagnostico'].disable()
           this.incidenciaForm.controls['solicitudCambio'].disable()
+        }
       }
       this.incidenciaForm.setValue({
         aula: this.i.aula,
@@ -122,8 +126,10 @@ export class IncidenciaDetailPage implements OnInit {
     this.computers.forEach(c => {
       if (c.edificio == edificio)
         if (c.aula == aula)
-          if (c.tipoEquipo == type)
+          if (c.tipoEquipo == type) {
             this.incidenciaForm.controls['idEquipo'].setValue(c.id);
+            this.computer = c;
+          }
     })
   }
 
@@ -146,35 +152,36 @@ export class IncidenciaDetailPage implements OnInit {
     let aula = this.incidenciaForm.controls['aula'].value!;
     let edificio = this.incidenciaForm.controls['edificio'].value!;
     let type = this.incidenciaForm.controls['type'].value!;
-    this.computerService.getByAulayEdificioyTipo(aula, edificio, type).subscribe(c => {
-      if (c.length > 0) {
-        let i: Incidencia = {
-          id: this.id,
-          aula: aula,
-          edificio: edificio,
-          clasificacion: this.incidenciaForm.controls['clasificacion'].value!,
-          type: type,
-          equipo: c[0],
-          department: this.authService.getActualUser().department,
-          description: this.incidenciaForm.controls['description'].value!,
-          priority: -1,
-          creationDate: undefined,
-          asignationDate: undefined,
-          finishedDate: undefined,
-          status: 0,
-          tecnico: null,
-          user: this.authService.getActualUser(),
-          diagnostico: '',
-          solicitudCambio: ''
-        };
+    if (this.computer) {
+      let i: Incidencia = {
+        id: this.id,
+        aula: aula,
+        edificio: edificio,
+        clasificacion: this.incidenciaForm.controls['clasificacion'].value!,
+        type: type,
+        equipo: this.computer,
+        department: this.authService.getActualUser().department,
+        description: this.incidenciaForm.controls['description'].value!,
+        priority: -1,
+        creationDate: undefined,
+        asignationDate: undefined,
+        finishedDate: undefined,
+        status: 0,
+        tecnico: null,
+        user: this.authService.getActualUser(),
+        diagnostico: '',
+        solicitudCambio: ''
+      };
+      if (!this.added) {
         this.incidenciaService.addSecreOJefeDpto(i).then(r => {
           this.alertservice.successful('Se ha agregado la incidencia');
         });
-        this.params.get('modal').dismiss();
-      } else {
-        this.alertservice.error("No existe un equipo de tipo " + type + " en el aula " + aula + " en el edificio " + edificio);
+        this.added = true
       }
-    })
+      this.params.get('modal').dismiss();
+    } else {
+      this.alertservice.error("No existe un equipo de tipo " + type + " en el aula " + aula + " en el edificio " + edificio);
+    }
   }
 
   savePriority() {
@@ -211,7 +218,7 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   finish() {
-    this.incidenciaService.TerminarIncidencia(this.id,this.incidenciaForm.controls['diagnostico'].value!,this.i.tecnico?.id!).then(r => {
+    this.incidenciaService.TerminarIncidencia(this.id, this.incidenciaForm.controls['diagnostico'].value!, this.i.tecnico?.id!).then(r => {
       this.alertservice.successful("Se ha terminado la incidencia");
       this.params.get('modal').dismiss();
     }).catch(e => {
@@ -220,7 +227,7 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   solicitudCambio() {
-    this.incidenciaService.SolicitudCambio(this.id,this.incidenciaForm.controls['diagnostico'].value!, this.incidenciaForm.controls['solicitudCambio'].value!).then(r => {
+    this.incidenciaService.SolicitudCambio(this.id, this.incidenciaForm.controls['diagnostico'].value!, this.incidenciaForm.controls['solicitudCambio'].value!).then(r => {
       this.alertservice.successful("Se ha creado la solicitud de cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {
@@ -238,7 +245,7 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   rechazarCambios() {
-    this.incidenciaService.rechazarSolicitudCambio(this.id,this.i.tecnico?.id!).then(r => {
+    this.incidenciaService.rechazarSolicitudCambio(this.id, this.i.tecnico?.id!).then(r => {
       this.alertservice.successful("Se ha rechazado la solicitud del cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {

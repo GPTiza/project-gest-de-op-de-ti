@@ -237,15 +237,23 @@ export class InventoryDetailPage implements OnInit {
       history: []
     }
     if (this.id.length > 0) {
+      let guardado = false;
       this.incidenciasService.getByComputerAndStatus(c.id, 6).subscribe(i => {
-        if (i.length > 0) {
-          c.history = this.computerService.setHistory(this.computer, c, i[0])
-          console.log(c)
-          this.computerService.put(c).then(r => {
-            this.alertservice.successful('Se ha actualizado el dispositivo');
-          });
-        } else {
-          this.alertservice.error('No hay ninguna incidencia con el cambio aprobado');
+        if (!guardado) {
+          if (i) {
+            let h = c.history;
+            console.log(h)
+            c.history = this.computerService.setHistory(this.computer, c, i)
+            console.log(c.history)
+            if (h.length < c.history.length)
+              this.computerService.put(c).then(r => {
+                this.alertservice.successful('Se ha actualizado el dispositivo');
+                guardado = true;
+              });
+            this.alertservice.error('No ha cambiado el No. de Serie');
+          } else {
+            this.alertservice.error('No hay ninguna incidencia con el cambio aprobado');
+          }
         }
       })
     }

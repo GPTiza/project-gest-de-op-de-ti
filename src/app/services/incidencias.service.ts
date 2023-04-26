@@ -130,6 +130,24 @@ export class IncidenciasService {
     }));
   }
 
+  public getAllget() {
+    let ref = this.db.collection("incidencias");
+    let user = this.authService.getActualUser();
+    if (user['type'] == 2)
+      ref = this.db.collection("incidencias", ref => ref.where("tecnicoId", "==", user['id']));
+    if (user['type'] > 2)
+      ref = this.db.collection("incidencias", ref => ref.where("userId", "==", user['id']));
+    return ref.get().pipe(map(res => {
+      let incidencias:Incidencia[]=[]
+      res.docs.forEach(r=>{
+          const data = r.data() as Incidencia;
+          data.id = r.id;
+          incidencias.push(data);
+      });
+      return incidencias;
+    }));
+  }
+
   public get(id: string) {
     return this.db.collection("incidencias").doc(id).get()
       .pipe(map(res => {
@@ -140,12 +158,10 @@ export class IncidenciasService {
   }
 
   public getByComputerAndStatus(computerId: string,status:number) {
-    return this.db.collection("incidencias",ref=>ref.where("equipoId","==",computerId).where("status","==",status)).snapshotChanges().pipe(map(res => {
-      return res.map(a => {
-        const data = a.payload.doc.data() as Incidencia;
-        data.id = a.payload.doc.id;
+    return this.db.collection("incidencias",ref=>ref.where("equipoId","==",computerId).where("status","==",status)).get().pipe(map(res => {
+        const data = res.docs[0].data() as Incidencia;
+        data.id = res.docs[0].id;
         return data;
-      })
     }));
   }
 }
