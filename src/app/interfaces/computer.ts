@@ -32,4 +32,6 @@ export interface Computer {
     projectorfocusname: string,
     projectorfocusvolt: number,
     projectorfocusbase: string,
+
+    history:any
 }

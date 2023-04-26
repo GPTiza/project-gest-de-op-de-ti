@@ -72,19 +72,15 @@
         </ion-col>
       </ion-row>
 
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-label>Latitud: </ion-label>
-            <ion-input formControlName="latitude"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label>Longitud: </ion-label>
-            <ion-input formControlName="longitude"></ion-input>
-          </ion-item>
-        </ion-col>
+      <ion-row *ngIf="this.userForm.controls['type'].value==2">
+        <ion-item>
+          <ion-label>Especialidad: </ion-label>
+          <ion-select interface="popover" formControlName="clasificacion">
+            <ion-select-option value="HW">Hardware</ion-select-option>
+            <ion-select-option value="SW">Software</ion-select-option>
+            <ion-select-option value="RD">Redes</ion-select-option>
+          </ion-select>
+        </ion-item>
       </ion-row>
 
       <ion-row>

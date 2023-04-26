@@ -4,13 +4,14 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Incidencia } from '../interfaces/incidencia';
 import { User } from '../interfaces/user';
 import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IncidenciasService {
 
-  constructor(private db: AngularFirestore, private authService: AuthService) { }
+  constructor(private db: AngularFirestore, private authService: AuthService, private userService: UserService) { }
 
   public addSecreOJefeDpto(s: Incidencia) {
     let id = this.db.createId();
@@ -23,8 +24,10 @@ export class IncidenciasService {
       user: s.user,
       userId: s.user.id,
       equipo: s.equipo,
+      equipoId: s.equipo.id,
       department: s.department,
       description: s.description,
+      clasificacion: '',
       priority: -1,
       status: 0,
       tecnico: null,
@@ -36,26 +39,36 @@ export class IncidenciasService {
     })
   }
 
-  public asignarPrioridad(id: string, priority: number) {
+  public asignarPrioridad(id: string, priority: number, clasificacion: string) {
     return this.db.collection("incidencias").doc(id).update({
       priority: priority,
+      clasificacion: clasificacion,
       status: 1
     })
   }
 
   public asignarTecnico(id: string, tecnico: User) {
+    tecnico.incidencias += 1;
     return this.db.collection("incidencias").doc(id).update({
       tecnico: tecnico,
       tecnicoId: tecnico.id,
       status: 2,
       asignationDate: new Date()
+    }).then(() => {
+      this.db.collection("users").doc(tecnico.id).update({
+        incidencias: tecnico.incidencias
+      })
     })
   }
 
-  public TerminarIncidencia(id: string) {
+  public TerminarIncidencia(id: string, diagnostico:string, tecnicoId: string) {
     return this.db.collection("incidencias").doc(id).update({
       status: 3,
+      diagnostico:diagnostico,
       finishedDate: new Date(),
+    }).then(() => {
+      if (tecnicoId)
+        this.userService.subIncidencias(tecnicoId);
     })
   }
 
@@ -66,9 +79,10 @@ export class IncidenciasService {
     })
   }
 
-  public SolicitudCambio(id: string, cambio: string) {
+  public SolicitudCambio(id: string, diagnostico:string, cambio: string) {
     return this.db.collection("incidencias").doc(id).update({
       solicitudCambio: cambio,
+      diagnostico:diagnostico,
       status: 5
     })
   }
@@ -79,9 +93,12 @@ export class IncidenciasService {
     })
   }
 
-  public rechazarSolicitudCambio(id: string) {
+  public rechazarSolicitudCambio(id: string, tecnicoId: string) {
     return this.db.collection("incidencias").doc(id).update({
       status: 7
+    }).then(() => {
+      if (tecnicoId)
+        this.userService.subIncidencias(tecnicoId);
     })
   }
 
@@ -120,5 +137,15 @@ export class IncidenciasService {
         data.id = id;
         return data;
       }));
+  }
+
+  public getByComputerAndStatus(computerId: string,status:number) {
+    return this.db.collection("incidencias",ref=>ref.where("equipoId","==",computerId).where("status","==",status)).snapshotChanges().pipe(map(res => {
+      return res.map(a => {
+        const data = a.payload.doc.data() as Incidencia;
+        data.id = a.payload.doc.id;
+        return data;
+      })
+    }));
   }
 }

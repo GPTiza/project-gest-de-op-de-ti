@@ -6,6 +6,7 @@ export interface Incidencia {
     aula:string,
     edificio:string,
     type:string,
+    clasificacion:string,
     equipo:Computer,
     department:string,
     description:string,
@@ -16,5 +17,6 @@ export interface Incidencia {
     status:number,
     tecnico:User|null,
     user:User,
+    diagnostico:string,
     solicitudCambio:string
 }

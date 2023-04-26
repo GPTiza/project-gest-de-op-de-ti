@@ -6,14 +6,18 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label>Aula: </ion-label>
-            <ion-input formControlName="aula"></ion-input>
+            <ion-label>Edificio: </ion-label>
+            <ion-select interface="popover" formControlName="edificio" (ionChange)="changeEdificio($event)">
+              <ion-select-option *ngFor="let edificio of edificios" [value]="edificio">{{edificio}}</ion-select-option>
+            </ion-select>
           </ion-item>
         </ion-col>
         <ion-col>
           <ion-item>
-            <ion-label>Edificio: </ion-label>
-            <ion-input formControlName="edificio"></ion-input>
+            <ion-label>Aula: </ion-label>
+            <ion-select (ionChange)="changeAula($event)" interface="popover" formControlName="aula">
+              <ion-select-option *ngFor="let aula of selectedAulas" [value]="aula">{{aula}}</ion-select-option>
+            </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -25,16 +29,24 @@
             <ion-textarea formControlName="description"></ion-textarea>
           </ion-item>
         </ion-col>
+      </ion-row>
+      <ion-row>
         <ion-col>
           <ion-item>
             <ion-label>Tipo: </ion-label>
-            <ion-select interface="popover" formControlName="type">
+            <ion-select (ionChange)="changeType($event)" interface="popover" formControlName="type">
               <ion-select-option value="pc">Computadora de Escritorio</ion-select-option>
               <ion-select-option value="laptop">Laptop</ion-select-option>
               <ion-select-option value="aio">All in one</ion-select-option>
               <ion-select-option value="printer">Impresora</ion-select-option>
               <ion-select-option value="projector">Proyector</ion-select-option>
             </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Id Equipo: </ion-label>
+            <ion-input readOnly="true" (click)="copyId()" formControlName="idEquipo"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -52,6 +64,16 @@
             </ion-select>
           </ion-item>
         </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label>Clasificación: </ion-label>
+            <ion-select interface="popover" formControlName="clasificacion">
+              <ion-select-option value="HW">Hardware</ion-select-option>
+              <ion-select-option value="SW">Software</ion-select-option>
+              <ion-select-option value="RD">Redes</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
       </ion-row>
 
       <ion-row *ngIf="loggedUserType<3 && status>0">
@@ -59,7 +81,7 @@
           <ion-item>
             <ion-label>Tecnico: </ion-label>
             <ion-select interface="popover" formControlName="tecnico">
-              <ion-select-option *ngFor="let u of tecnicos" [value]="u.id">{{u.name}} {{u.lastname}}</ion-select-option>
+              <ion-select-option *ngFor="let u of tecnicos" [value]="u.id">{{u.name}} {{u.lastname}} - {{u.incidencias}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
@@ -67,6 +89,12 @@
 
 
       <ion-row *ngIf="loggedUserType<3 && (status==2 || status==5 || status==6  || status==7)">
+        <ion-col>
+          <ion-item>
+            <ion-label>Diagnostico: </ion-label>
+            <ion-textarea formControlName="diagnostico"></ion-textarea>
+          </ion-item>
+        </ion-col>
         <ion-col>
           <ion-item>
             <ion-label>Solicitud de Cambio: </ion-label>
@@ -84,10 +112,10 @@
           Incidencia</ion-button>
         <ion-button *ngIf="loggedUserType<2 && status==1" button color="success"
           (click)="saveTecnico()">Guardar</ion-button>
-        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)" button color="success"
+        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)" [disabled]="this.incidenciaForm.controls['diagnostico'].value==''" button color="success"
           (click)="finish()">Terminar
           Incidencia</ion-button>
-        <ion-button *ngIf="loggedUserType==2 && status==2" button (click)="solicitudCambio()">Enviar Solicitud de
+        <ion-button *ngIf="loggedUserType==2 && status==2" button [disabled]="this.incidenciaForm.controls['diagnostico'].value=='' || this.incidenciaForm.controls['solicitudCambio'].value==''" (click)="solicitudCambio()">Enviar Solicitud de
           Cambio</ion-button>
         <ion-button *ngIf="loggedUserType<2 && status==5" button color="success" (click)="aceptarCambios()">Aceptar
           Solicitud de Cambio</ion-button>

@@ -157,7 +157,7 @@ export class InventoryPage implements OnInit {
       else
         filter = this.filteredComputers;
       let txt = this.txtSearch;
-      this.filteredComputers = filter.filter(u => u.name.toLowerCase().includes(txt.toLowerCase()) || u.brand.toLowerCase().includes(txt.toLowerCase()));
+      this.filteredComputers = filter.filter(u => u.name.toLowerCase().includes(txt.toLowerCase()) || u.brand.toLowerCase().includes(txt.toLowerCase()) || u.id.toLowerCase().includes(txt.toLowerCase()));
     }
   }
 

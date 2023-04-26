@@ -7,6 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { ComputerService } from 'src/app/services/computer.service';
 import { User } from 'src/app/interfaces/user';
 import { AlertService } from 'src/app/services/alert.service';
+import { IncidenciasService } from 'src/app/services/incidencias.service';
 
 @Component({
   selector: 'app-inventory-detail',
@@ -19,6 +20,8 @@ export class InventoryDetailPage implements OnInit {
   id = "";
   users: User[] = [];
   selectedUser!: User;
+  computer!: Computer;
+  seeHistory = false;
 
   aulasFiltered = [];
   edificiosSistemas = ["EA", "EB", "EC", "CC"]
@@ -91,12 +94,27 @@ export class InventoryDetailPage implements OnInit {
     projectorfocusbase: new FormControl('', []),
   });
 
-  constructor(private params: NavParams, private userService: UserService, private computerService: ComputerService,private alertservice:AlertService) {
-    if (params.get('computer')) {
-      if(!params.get('canEdit')){
+  constructor(private params: NavParams, private userService: UserService, private incidenciasService: IncidenciasService, private computerService: ComputerService, private alertservice: AlertService) {
+    this.loadInit()
+  }
+
+  ngOnInit() {
+    this.loadInit
+  }
+
+  loadInit() {
+
+    this.userService.getAll().subscribe(u => {
+      this.users = u;
+      this.selectedUser = this.users[0];
+    })
+    if (this.params.get('computer')) {
+      if (!this.params.get('canEdit')) {
         this.computerForm.disable()
       }
-      let c: Computer = params.get('computer');
+
+      let c: Computer = this.params.get('computer');
+      this.computer = c;
       var disk = new Date(0);
       disk.setUTCSeconds(c.disk.warrantyExpirationDate['seconds']);
       var ram = new Date(0);
@@ -175,19 +193,12 @@ export class InventoryDetailPage implements OnInit {
         printertype: c.printertype,
         printerinktype: c.printerinktype,
         printername: c.printername,
-        
-    projectorfocusname: c.projectorfocusname,
-    projectorfocusvolt: c.projectorfocusvolt,
-    projectorfocusbase: c.projectorfocusbase,
+
+        projectorfocusname: c.projectorfocusname,
+        projectorfocusvolt: c.projectorfocusvolt,
+        projectorfocusbase: c.projectorfocusbase,
       });
     }
-  }
-
-  ngOnInit() {
-    this.userService.getAll().subscribe(u => {
-      this.users = u;
-      this.selectedUser = this.users[0];
-    })
   }
 
   save() {
@@ -223,11 +234,21 @@ export class InventoryDetailPage implements OnInit {
       projectorfocusname: this.computerForm.controls['projectorfocusname'].value!,
       projectorfocusvolt: this.computerForm.controls['projectorfocusvolt'].value!,
       projectorfocusbase: this.computerForm.controls['projectorfocusbase'].value!,
+      history: []
     }
-    if (this.id.length > 0)
-      this.computerService.put(c).then(r => {
-        this.alertservice.successful('Se ha actualizado el dispositivo');
-      });
+    if (this.id.length > 0) {
+      this.incidenciasService.getByComputerAndStatus(c.id, 6).subscribe(i => {
+        if (i.length > 0) {
+          c.history = this.computerService.setHistory(this.computer, c, i[0])
+          console.log(c)
+          this.computerService.put(c).then(r => {
+            this.alertservice.successful('Se ha actualizado el dispositivo');
+          });
+        } else {
+          this.alertservice.error('No hay ninguna incidencia con el cambio aprobado');
+        }
+      })
+    }
     else
       this.computerService.add(c).then(r => {
         this.alertservice.successful('Se ha agregado el dispositivo');
@@ -246,6 +267,10 @@ export class InventoryDetailPage implements OnInit {
     if (this.computerForm.get(name + 'type'))
       c.type = this.computerForm.get(name + 'type')?.value;
     return c;
+  }
+
+  viewHistory() {
+    this.seeHistory = !this.seeHistory;
   }
 
 }

@@ -604,5 +604,83 @@
     <div class="center" *ngIf="!computerForm.disabled">
       <ion-button color="success" [disabled]="!computerForm.valid" (click)="save()">Guardar</ion-button>
     </div>
+    <div class="center">
+      <ion-button (click)="viewHistory()">Ver historial</ion-button>
+    </div>
   </form>
+
+  <ion-grid *ngIf="seeHistory">
+    <ion-row>
+      <ion-col class="center">
+        <h1>Antes</h1>
+      </ion-col>
+      <ion-col class="center">
+        <h1>Después</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let history of computer.history" class="historyComp">
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-label>Fecha de cambio: </ion-label>
+            {{history.date}}
+          </ion-item>
+          <ion-item>
+            <ion-label>Componente: </ion-label>
+            {{history.comp}}
+          </ion-item>
+          <ion-item>
+            <ion-label>Tecnico: </ion-label>
+            {{history.tecnico.name}} {{history.tecnico.lastname}}
+          </ion-item>
+          <ion-item>
+            <ion-label>Usuario: </ion-label>
+            {{history.user.name}} {{history.user.lastname}}
+          </ion-item>
+          <ion-item>
+            <ion-label>Id incidencia: </ion-label>
+            {{history.incidencia}}
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-label>Antes</ion-label>
+            <ion-list>
+              <ion-item>
+                <ion-label>No. de Serie:</ion-label>
+                {{history.antes.serieNumber}}
+              </ion-item>
+              <ion-item>
+                <ion-label>Marca:</ion-label>
+                {{history.antes.name}}
+              </ion-item>
+              <ion-item *ngIf="history.antes.type">
+                <ion-label>Tipo:</ion-label>
+                {{history.antes.type}}
+              </ion-item>
+            </ion-list>
+          </ion-item>
+          <ion-item>
+            <ion-label>Después</ion-label>
+            <ion-list>
+              <ion-item>
+                <ion-label>No. de Serie:</ion-label>
+                {{history.despues.serieNumber}}
+              </ion-item>
+              <ion-item>
+                <ion-label>Marca:</ion-label>
+                {{history.despues.name}}
+              </ion-item>
+              <ion-item *ngIf="history.despues.type">
+                <ion-label>Tipo:</ion-label>
+                {{history.despues.type}}
+              </ion-item>
+            </ion-list>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

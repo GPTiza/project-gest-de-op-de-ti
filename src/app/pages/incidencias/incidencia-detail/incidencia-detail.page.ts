@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavParams } from '@ionic/angular';
+import { Computer } from 'src/app/interfaces/computer';
 import { Incidencia } from 'src/app/interfaces/incidencia';
 import { User } from 'src/app/interfaces/user';
 import { AlertService } from 'src/app/services/alert.service';
@@ -20,18 +21,25 @@ export class IncidenciaDetailPage implements OnInit {
   loggedUserType = 4
   status = 0;
   tecnicos: User[] = [];
-
+  edificios: string[] = [];
+  aulas: string[][] = [];
+  selectedAulas: string[] = []
+  computers: Computer[] = []
+  i!:Incidencia;
   incidenciaForm = new FormGroup({
     aula: new FormControl('', [Validators.required]),
     edificio: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required, Validators.minLength(50)]),
     type: new FormControl('', [Validators.required]),
+    idEquipo: new FormControl('', [Validators.required, Validators.minLength(5)]),
     priority: new FormControl(-1),
+    clasificacion: new FormControl(''),
     tecnico: new FormControl(this.userService.getExampleUser().name + " " + this.userService.getExampleUser().lastname),
+    diagnostico: new FormControl(''),
     solicitudCambio: new FormControl(''),
   });
 
-  constructor(private params: NavParams, private incidenciaService: IncidenciasService,private alertservice:AlertService, private userService: UserService, private computerService: ComputerService, private authService: AuthService, private router: Router) {
+  constructor(private params: NavParams, private incidenciaService: IncidenciasService, private alertservice: AlertService, private userService: UserService, private computerService: ComputerService, private authService: AuthService, private router: Router) {
 
     if (!this.authService.getActualUser())
       this.router.navigateByUrl("login");
@@ -39,36 +47,99 @@ export class IncidenciaDetailPage implements OnInit {
     this.userService.getTecnicos().subscribe(ts => {
       this.tecnicos = ts;
     })
-
     if (params.get('incidencia')) {
-      let i: Incidencia = params.get('incidencia');
-      this.id = i.id;
-      this.status = i.status;
+      this.i = params.get('incidencia');
+      this.id = this.i.id;
+      this.status = this.i.status;
+      this.incidenciaForm.controls['idEquipo'].disable()
       if (!params.get('canEdit')) {
         this.incidenciaForm.controls['aula'].disable()
         this.incidenciaForm.controls['edificio'].disable()
         this.incidenciaForm.controls['description'].disable()
         this.incidenciaForm.controls['type'].disable()
-        if (this.status > 0)
+        if (this.status > 0) {
           this.incidenciaForm.controls['priority'].disable()
+          this.incidenciaForm.controls['clasificacion'].disable()
+          this.tecnicos = this.tecnicos.filter(t => t.clasificacion ==this.i.clasificacion);
+          this.tecnicos.sort((a,b)=>a.incidencias-b.incidencias);
+        }
         if (this.status > 1)
           this.incidenciaForm.controls['tecnico'].disable()
         if (this.status > 4 || this.loggedUserType != 2)
           this.incidenciaForm.controls['solicitudCambio'].disable()
       }
       this.incidenciaForm.setValue({
-        aula: i.aula,
-        edificio: i.edificio,
-        description: i.description,
-        type: i.type,
-        priority: i.priority,
-        tecnico: i.tecnico?.id + '',
-        solicitudCambio: i.solicitudCambio == null ? '' : i.solicitudCambio
+        aula: this.i.aula,
+        edificio: this.i.edificio,
+        description: this.i.description,
+        clasificacion: this.i.clasificacion == null ? '' : this.i.clasificacion,
+        idEquipo: this.i.equipo == null ? '' : this.i.equipo.id,
+        type: this.i.type,
+        priority: this.i.priority,
+        tecnico: this.i.tecnico?.id + '',
+        diagnostico: this.i.diagnostico == null ? '' : this.i.diagnostico,
+        solicitudCambio: this.i.solicitudCambio == null ? '' : this.i.solicitudCambio
       });
+    } else {
+      this.computerService.getByDepartamento(this.authService.getActualUser()['department']).subscribe(computers => {
+        this.computers = computers;
+        this.aulas = []
+        computers.forEach(c => {
+          if (!this.edificios.includes(c.edificio))
+            this.edificios.push(c.edificio)
+          if (this.aulas == undefined)
+            this.aulas = []
+          if (this.aulas[c.edificio.toString()] == undefined)
+            this.aulas[c.edificio.toString()] = []
+          this.aulas[c.edificio.toString()].push(c.aula)
+        })
+      })
     }
   }
 
   ngOnInit() {
+  }
+
+  changeEdificio(e: any) {
+    this.selectedAulas = this.aulas[e.detail.value]
+    this.incidenciaForm.controls['aula'].setValue('')
+  }
+
+  changeAula(e: any) {
+    if (this.incidenciaForm.controls['type'].value != null && this.incidenciaForm.controls['type'].value?.length > 0)
+      this.setIDComputer();
+  }
+
+  changeType(e: any) {
+    this.setIDComputer();
+  }
+
+  setIDComputer() {
+    this.incidenciaForm.controls['idEquipo'].setValue('');
+    let edificio = this.incidenciaForm.controls['edificio'].value!
+    let aula = this.incidenciaForm.controls['aula'].value!
+    let type = this.incidenciaForm.controls['type'].value!
+    this.computers.forEach(c => {
+      if (c.edificio == edificio)
+        if (c.aula == aula)
+          if (c.tipoEquipo == type)
+            this.incidenciaForm.controls['idEquipo'].setValue(c.id);
+    })
+  }
+
+  copyId() {
+    let val = this.incidenciaForm.controls['idEquipo'].value!
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
   save() {
@@ -81,6 +152,7 @@ export class IncidenciaDetailPage implements OnInit {
           id: this.id,
           aula: aula,
           edificio: edificio,
+          clasificacion: this.incidenciaForm.controls['clasificacion'].value!,
           type: type,
           equipo: c[0],
           department: this.authService.getActualUser().department,
@@ -92,6 +164,7 @@ export class IncidenciaDetailPage implements OnInit {
           status: 0,
           tecnico: null,
           user: this.authService.getActualUser(),
+          diagnostico: '',
           solicitudCambio: ''
         };
         this.incidenciaService.addSecreOJefeDpto(i).then(r => {
@@ -105,7 +178,7 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   savePriority() {
-    this.incidenciaService.asignarPrioridad(this.id, this.incidenciaForm.controls['priority'].value!).then(r => {
+    this.incidenciaService.asignarPrioridad(this.id, this.incidenciaForm.controls['priority'].value!, this.incidenciaForm.controls['clasificacion'].value!).then(r => {
       this.alertservice.successful("Se ha asignado la prioridad");
       this.params.get('modal').dismiss();
     }).catch(e => {
@@ -138,7 +211,7 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   finish() {
-    this.incidenciaService.TerminarIncidencia(this.id).then(r => {
+    this.incidenciaService.TerminarIncidencia(this.id,this.incidenciaForm.controls['diagnostico'].value!,this.i.tecnico?.id!).then(r => {
       this.alertservice.successful("Se ha terminado la incidencia");
       this.params.get('modal').dismiss();
     }).catch(e => {
@@ -147,7 +220,7 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   solicitudCambio() {
-    this.incidenciaService.SolicitudCambio(this.id, this.incidenciaForm.controls['solicitudCambio'].value!).then(r => {
+    this.incidenciaService.SolicitudCambio(this.id,this.incidenciaForm.controls['diagnostico'].value!, this.incidenciaForm.controls['solicitudCambio'].value!).then(r => {
       this.alertservice.successful("Se ha creado la solicitud de cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {
@@ -165,14 +238,14 @@ export class IncidenciaDetailPage implements OnInit {
   }
 
   rechazarCambios() {
-    this.incidenciaService.rechazarSolicitudCambio(this.id).then(r => {
+    this.incidenciaService.rechazarSolicitudCambio(this.id,this.i.tecnico?.id!).then(r => {
       this.alertservice.successful("Se ha rechazado la solicitud del cambio");
       this.params.get('modal').dismiss();
     }).catch(e => {
       this.alertservice.error("Ha ocurrido un error");
     })
   }
-  
+
   liberar() {
     this.incidenciaService.LiberarIncidencia(this.id).then((r: any) => {
       this.alertservice.successful("Se ha liberado la incidencia");

@@ -7,8 +7,9 @@ export interface User {
   isMale: boolean;
   birthdate: any;
   department: string;
-  location: any;
-  type:number,
+  clasificacion:string;
+  type:number;
+  incidencias:number;
   entryTime:string;
   departureTime:string;
   expiredTime:number
