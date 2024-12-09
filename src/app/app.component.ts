@@ -32,6 +32,16 @@ export class AppComponent {
     this.router.navigateByUrl('/knowledge')
   }
 
+  goServices() {
+    this.menuCtrl.close()
+    this.router.navigateByUrl('/services')
+  }
+
+  goInfrastucture() {
+    this.menuCtrl.close()
+    this.router.navigateByUrl('/infrastructure')
+  }
+
   goIncidencias() {
     this.menuCtrl.close()
     this.router.navigateByUrl('/incidencias')

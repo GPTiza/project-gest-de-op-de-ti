@@ -69,9 +69,9 @@
       <ion-col size="4">
         <ion-item>
           <ion-label>Fecha de Inicio: </ion-label>
-          <ion-input [(ngModel)]="initialDate" type="date" [max]="finishDate" (ionChange)="changeInitialDate($event)"></ion-input>
+          <ion-input [(ngModel)]="initialDate" type="date" [max]="finishDate" (ionChange)="changeInitialDate($event)" value="2023-01-01"></ion-input>
         </ion-item>
-      </ion-col>
+      </ion-col>       
       <ion-col size="4">
         <ion-item>
           <ion-label>Fecha de Fin: </ion-label>

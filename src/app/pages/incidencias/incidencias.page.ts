@@ -15,7 +15,6 @@ import { AlertService } from 'src/app/services/alert.service';
   styleUrls: ['./incidencias.page.scss'],
 })
 export class IncidenciasPage implements OnInit {
-
   incidencias: Incidencia[] = [];
   filteredIncidencias: Incidencia[] = [];
   txtSearch = "";
@@ -29,6 +28,7 @@ export class IncidenciasPage implements OnInit {
   initialDate= new Date().toISOString().substring(0,10)
   finishDate= new Date().toISOString().substring(0,10)
   today=new Date().toISOString().substring(0,10)
+  
 
   types = new Map<string, string>([
     ["pc", "Computadora de Escritorio"],
@@ -64,6 +64,7 @@ export class IncidenciasPage implements OnInit {
   constructor(private incidenciaservice: IncidenciasService, private alertService: AlertService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
+    this.initialDate = '2023-01-01'; // Fecha por defecto
     if (!this.authService.getActualUser())
       this.router.navigateByUrl("login");
     this.loggedUserType = this.authService.getActualUser()['type'];
@@ -80,7 +81,7 @@ export class IncidenciasPage implements OnInit {
           if (this.tecnicos.filter(r => r.id == comp.tecnico!.id).length == 0)
             this.tecnicos.push(comp.tecnico!);
       }))
-      this.filterincidencias()
+      this.filterincidencias();
     })
   }
 
@@ -159,9 +160,9 @@ export class IncidenciasPage implements OnInit {
     this.filterincidencias()
   }
 
-  changeInitialDate(e:any){
+  changeInitialDate(e: any) {
     this.initialDate = e.detail.value;
-    this.filterincidencias()
+    this.filterincidencias();
   }
 
   changeFinishDate(e:any){

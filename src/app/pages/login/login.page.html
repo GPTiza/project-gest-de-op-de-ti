@@ -2,17 +2,16 @@
   <ion-card class="card-content login view">
     <div class="container">
       <ion-card-header class="display-flex">
-        <img class="logo" src="../../../assets/icon/icon.jpg">
+        <img class="logo" src="../../../assets/icon/icon.png">
       </ion-card-header>
-      <h1 class="title">InciTec</h1>
+      <!--<h1 class="title">ReparaTec</h1>-->
       <ion-card-content>
         <form [formGroup]="loginForm" autocomplete="off">
           <div align="center">
             <ion-spinner *ngIf="this.loading"></ion-spinner>
           </div>
           <ion-item class="item">
-            <input autocomplete="off" class="emailinput" formControlName="email"
-              placeholder="Correo">
+            <input autocomplete="off" class="emailinput" formControlName="email" placeholder="Correo">
           </ion-item>
           <ion-item class="item">
             <input autocomplete="off" required type="password" formControlName="password" placeholder="Contraseña"
@@ -22,11 +21,7 @@
             class="login-button">
             Iniciar sesión
           </ion-button>
-          <!-- <div class="display-flex info">
-            <a [routerLink]="['/register']" routerLinkActive="router-link-active" class="link">Regístrate</a>
-            <a [routerLink]="['/resetp']" class="linkforgot" >¿Olvidaste
-              tu contraseña?</a>
-          </div> -->
+
         </form>
       </ion-card-content>
     </div>

@@ -5,6 +5,7 @@ import { NavParams } from '@ionic/angular';
 import { User } from 'src/app/interfaces/user';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { InfraestructuraService } from 'src/app/services/infraestructura.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { UserService } from 'src/app/services/user.service';
 export class NewPage implements OnInit {
   id=""
   loggedUserType=4
+  departamentos: string[] = [];
 
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -30,7 +32,7 @@ export class NewPage implements OnInit {
     departureTime: new FormControl('', [Validators.required]),
   });
 
-  constructor(private params: NavParams,private userService:UserService, private authService: AuthService,private alertservice:AlertService) {
+  constructor(private params: NavParams,private infraestructuraService:InfraestructuraService,private userService:UserService, private authService: AuthService,private alertservice:AlertService) {
     if(params.get('user')){
       let u:User=params.get('user');
       var d = new Date(0);
@@ -56,6 +58,11 @@ export class NewPage implements OnInit {
     this.loggedUserType=this.authService.getActualUser()['type'];
     if(this.loggedUserType<2)
       this.params.get('modal').dismiss();
+    this.infraestructuraService.getAllDepartamentos().subscribe(ds=>{
+      this.departamentos = ds.map(d=>{
+        return d.nombre;
+      });
+    })
   }
 
   save(){

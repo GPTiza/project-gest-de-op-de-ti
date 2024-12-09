@@ -7,7 +7,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Edificio: </ion-label>
-            <ion-select interface="popover" formControlName="edificio" (ionChange)="changeEdificio($event)">
+            <ion-select interface="popover" formControlName="edificio">
               <ion-select-option *ngFor="let edificio of edificios" [value]="edificio">{{edificio}}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -15,8 +15,8 @@
         <ion-col>
           <ion-item>
             <ion-label>Aula: </ion-label>
-            <ion-select (ionChange)="changeAula($event)" interface="popover" formControlName="aula">
-              <ion-select-option *ngFor="let aula of selectedAulas" [value]="aula">{{aula}}</ion-select-option>
+            <ion-select interface="popover" formControlName="aula" [disabled]="!incidenciaForm.get('edificio')?.value">
+              <ion-select-option *ngFor="let aula of aulas[incidenciaForm.get('edificio')?.value!]" [value]="aula">{{aula}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
@@ -87,7 +87,6 @@
         </ion-col>
       </ion-row>
 
-
       <ion-row *ngIf="loggedUserType<3 && (status==2 || status==5 || status==6  || status==7)">
         <ion-col>
           <ion-item>
@@ -95,11 +94,27 @@
             <ion-textarea formControlName="diagnostico"></ion-textarea>
           </ion-item>
         </ion-col>
+                
+      </ion-row>
+
+      <ion-row *ngIf="loggedUserType<3 && (status==2 || status==5 || status==6  || status==7)">
         <ion-col>
           <ion-item>
             <ion-label>Solicitud de Cambio: </ion-label>
             <ion-textarea formControlName="solicitudCambio"></ion-textarea>
           </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <h2>Servicios</h2>
+          <ion-list>
+            <ion-item *ngFor="let service of servicesR">
+              <ion-label>{{ service.name }}</ion-label>
+              <ion-checkbox [(ngModel)]="service.checked" (ionChange)="updateTime()"></ion-checkbox>
+            </ion-item>
+          </ion-list>
         </ion-col>
       </ion-row>
 
@@ -115,17 +130,20 @@
         <ion-button *ngIf="loggedUserType<2 && status==1" button color="success"
           (click)="saveTecnico()">Guardar</ion-button>
 
-        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)" [disabled]="this.incidenciaForm.controls['diagnostico'].value==''" button color="success"
+        <ion-button *ngIf="loggedUserType==2 && (status==2 || status==6)"
+          [disabled]="this.incidenciaForm.controls['diagnostico'].value==''" button color="success"
           (click)="finish()">Terminar
           Incidencia</ion-button>
-        <ion-button *ngIf="loggedUserType==2 && status==2" button [disabled]="this.incidenciaForm.controls['diagnostico'].value=='' || this.incidenciaForm.controls['solicitudCambio'].value==''" (click)="solicitudCambio()">Enviar Solicitud de
+        <ion-button *ngIf="loggedUserType==2 && status==2" button
+          [disabled]="this.incidenciaForm.controls['diagnostico'].value=='' || this.incidenciaForm.controls['solicitudCambio'].value==''"
+          (click)="solicitudCambio()">Enviar Solicitud de
           Cambio</ion-button>
 
         <ion-button *ngIf="loggedUserType<2 && status==5" button color="success" (click)="aceptarCambios()">Aceptar
           Solicitud de Cambio</ion-button>
         <ion-button *ngIf="loggedUserType<2 && status==5" button color="danger" (click)="rechazarCambios()">Rechazar
           Solicitud de Cambio</ion-button>
-          
+
         <ion-button *ngIf="loggedUserType<2 && status==3" button color="success" (click)="liberar()">Liberar
           Incidencia</ion-button>
       </div>

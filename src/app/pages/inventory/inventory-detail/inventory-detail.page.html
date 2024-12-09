@@ -27,23 +27,16 @@
           <ion-item>
             <ion-label>Departamento: </ion-label>
             <ion-select interface="popover" formControlName="department">
-              <ion-select-option value="Sistemas">Sistemas</ion-select-option>
-              <ion-select-option value="Bioquimica">Bioquimica</ion-select-option>
-              <ion-select-option value="Industrial">Industrial</ion-select-option>
-              <ion-select-option value="Posgrado">Posgrado</ion-select-option>
-              <ion-select-option value="Mecanica">Mecanica</ion-select-option>
-              <ion-select-option value="eco/adm">Economico/Administrativo</ion-select-option>
+              <ion-select-option *ngFor="let departamento of departamentos"
+                [value]="departamento">{{departamento}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
         <ion-col>
-          <ion-item [ngSwitch]="computerForm.controls['department'].value!">
+          <ion-item>
             <ion-label>Edificio: </ion-label>
-            <ion-select interface="popover" *ngSwitchDefault formControlName="edificio">
-              <ion-select-option value=""></ion-select-option>
-            </ion-select>
-            <ion-select interface="popover" *ngSwitchCase="'Sistemas'" formControlName="edificio">
-              <ion-select-option *ngFor="let edificio of edificiosSistemas"
+            <ion-select interface="popover" formControlName="edificio">
+              <ion-select-option *ngFor="let edificio of edificiosFiltrados"
                 [value]="edificio">{{edificio}}</ion-select-option>
             </ion-select>
           </ion-item>
@@ -52,15 +45,8 @@
           <ion-item>
             <ion-label>Aula: </ion-label>
             <ion-select interface="popover" formControlName="aula">
-              <ion-select-option value="A1">A1</ion-select-option>
-              <ion-select-option value="A2">A2</ion-select-option>
-              <ion-select-option value="A3">A3</ion-select-option>
-              <ion-select-option value="A4">A4</ion-select-option>
-              <ion-select-option value="A5">A5</ion-select-option>
-              <ion-select-option value="A6">A6</ion-select-option>
-              <ion-select-option value="A7">A7</ion-select-option>
-              <ion-select-option value="A8">A8</ion-select-option>
-              <ion-select-option value="LP">LP</ion-select-option>
+              <ion-select-option *ngFor="let aula of aulasFiltradas"
+                [value]="aula">{{aula}}</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>

@@ -1,4 +1,4 @@
-# Incitec
+# ReparaTec
 
 Tech Stack:
 Ionic v5.4.16

@@ -14,7 +14,6 @@ import { AlertService } from 'src/app/services/alert.service';
   styleUrls: ['./knowledge.page.scss'],
 })
 export class KnowledgePage implements OnInit {
-
   services:Service[]=[];
   loggedUserType=4
   constructor(private serviceService: ServicesService,private alertService:AlertService,private authService:AuthService,private router:Router, public modalCtrl: ModalController) { }
@@ -23,7 +22,7 @@ export class KnowledgePage implements OnInit {
     if (!this.authService.getActualUser())
       this.router.navigateByUrl("login");
     this.loggedUserType=this.authService.getActualUser()['type'];
-    this.serviceService.getAll().subscribe(c => {
+    this.serviceService.getAllProblem().subscribe(c => {
       this.services = c
     })
   }
@@ -57,7 +56,7 @@ export class KnowledgePage implements OnInit {
 
   delete(id: string) {
     if (confirm("¿Está seguro que desea eliminar este servicio?")) {
-      this.serviceService.del(id).then(r => {
+      this.serviceService.delProblem(id).then(r => {
         this.alertService.successful("Se ha eliminado el servicio");
       })
     }

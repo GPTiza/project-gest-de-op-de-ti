@@ -28,11 +28,9 @@
           <ion-select [(ngModel)]="department" interface="popover" [compareWith]="compareWith"
             (ionChange)="changeDepartment($event)">
             <ion-select-option value="Todos">Todos</ion-select-option>
-            <ion-select-option>Prueba</ion-select-option>
-            <ion-select-option>Sistemas</ion-select-option>
-            <ion-select-option>Bioquimica</ion-select-option>
-            <ion-select-option>Mecánica</ion-select-option>
-            <ion-select-option>Ciencias Básicas</ion-select-option>
+            <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento">
+              {{ departamento }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>

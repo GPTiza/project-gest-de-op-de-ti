@@ -8,6 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 import { InventoryDetailPage } from './inventory-detail/inventory-detail.page';
 import { User } from 'src/app/interfaces/user';
 import { AlertService } from 'src/app/services/alert.service';
+import { InfraestructuraService } from 'src/app/services/infraestructura.service';
 
 @Component({
   selector: 'app-inventory',
@@ -24,6 +25,7 @@ export class InventoryPage implements OnInit {
   responsables: User[] = []
   type = "Todos"
   loggedUserType=4
+  departamentos: string[] = [];
   types = new Map<string, string>([
     ["pc", "Computadora de Escritorio"],
     ["laptop", "Laptop"],
@@ -32,7 +34,7 @@ export class InventoryPage implements OnInit {
     ["projector", "Proyector"]
   ]);
 
-  constructor(private computerService: ComputerService, private alertservice:AlertService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
+  constructor(private infraestructuraService: InfraestructuraService, private computerService: ComputerService, private alertservice:AlertService, private authService: AuthService, private router: Router, public modalCtrl: ModalController) { }
 
   ngOnInit() {
     if (!this.authService.getActualUser())
@@ -45,6 +47,11 @@ export class InventoryPage implements OnInit {
           this.responsables.push(comp.responsable);
         }
       }))
+      this.infraestructuraService.getAllDepartamentos().subscribe((data) => {
+        this.departamentos = data.map(d=>{
+          return d.nombre;
+        });
+      });
     })
   }
 

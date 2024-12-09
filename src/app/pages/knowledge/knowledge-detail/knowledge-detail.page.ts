@@ -11,7 +11,8 @@ import { ServicesService } from 'src/app/services/services.service';
   styleUrls: ['./knowledge-detail.page.scss'],
 })
 export class KnowledgeDetailPage implements OnInit {
-  id=""
+  id = ""
+  isService = false;
 
   serviceForm = new FormGroup({
     problem: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -19,10 +20,14 @@ export class KnowledgeDetailPage implements OnInit {
     time: new FormControl(0, [Validators.required]),
   });
 
-  constructor(private params: NavParams,private serviceService:ServicesService,private alertService:AlertService) {
-    if(params.get('service')){
-      let s:Service=params.get('service');
-      this.id=s.id;
+  constructor(private params: NavParams, private serviceService: ServicesService, private alertService: AlertService) {
+    if (params.get('problems')) {
+      this.isService = true;
+      this.serviceForm.controls['solution'] = new FormControl('')
+    }
+    if (params.get('service')) {
+      let s: Service = params.get('service');
+      this.id = s.id;
       this.serviceForm.setValue({
         problem: s.problem,
         solution: s.solution,
@@ -34,23 +39,34 @@ export class KnowledgeDetailPage implements OnInit {
   ngOnInit() {
   }
 
-  save(){
-    let u:Service={
+  save() {
+    let u: Service = {
       id: this.id,
       problem: this.serviceForm.controls['problem'].value!,
       solution: this.serviceForm.controls['solution'].value!,
       time: this.serviceForm.controls['time'].value!,
-      date:new Date().getDate()+"/"+new Date().getMonth()+"/"+new Date().getFullYear(),
+      date: new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear(),
       createdDate: new Date(),
     };
-    if(this.id.length>0)
-      this.serviceService.put(u).then(()=>{
-        this.alertService.successful('Se ha actualizado el servicio');
-      });
-    else
-    this.serviceService.add(u).then(()=>{
-      this.alertService.successful('Se ha agregado el servicio');
-    });
+    if(!this.isService){
+      if (this.id.length > 0)
+        this.serviceService.putProblem(u).then(() => {
+          this.alertService.successful('Se ha actualizado el problema');
+        });
+      else
+        this.serviceService.addProblem(u).then(() => {
+          this.alertService.successful('Se ha agregado el problema');
+        });
+    }else{
+      if (this.id.length > 0)
+        this.serviceService.putService(u).then(() => {
+          this.alertService.successful('Se ha actualizado el servicio');
+        });
+      else
+        this.serviceService.addService(u).then(() => {
+          this.alertService.successful('Se ha agregado el servicio');
+        });
+    }
     this.params.get('modal').dismiss();
   }
 

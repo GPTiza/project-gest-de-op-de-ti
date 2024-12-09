@@ -8,6 +8,8 @@ import { ComputerService } from 'src/app/services/computer.service';
 import { User } from 'src/app/interfaces/user';
 import { AlertService } from 'src/app/services/alert.service';
 import { IncidenciasService } from 'src/app/services/incidencias.service';
+import { InfraestructuraService } from 'src/app/services/infraestructura.service';
+import { Aula } from 'src/app/interfaces/aula';
 
 @Component({
   selector: 'app-inventory-detail',
@@ -16,17 +18,19 @@ import { IncidenciasService } from 'src/app/services/incidencias.service';
 })
 
 export class InventoryDetailPage implements OnInit {
-
+  edificiosSistemas = []
   id = "";
   users: User[] = [];
   selectedUser!: User;
   computer!: Computer;
   seeHistory = false;
 
-  aulasFiltered = [];
-  edificiosSistemas = ["EA", "EB", "EC", "CC"]
-  aulasClases = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"];
-  aulasCC = ["BD", "PW", "DM", "DS"]
+  edificiosFiltrados: string[] = [];
+  aulasFiltradas: string[] = [];
+
+  departamentos: string[] = ['Sistemas', 'Bioquimica', 'Mecánica', 'Ciencias Básicas'];
+  edificios: any = {};
+  aulas: any = {};
 
   computerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -94,45 +98,68 @@ export class InventoryDetailPage implements OnInit {
     projectorfocusbase: new FormControl('', []),
   });
 
-  constructor(private params: NavParams, private userService: UserService, private incidenciasService: IncidenciasService, private computerService: ComputerService, private alertservice: AlertService) {
+  constructor(private params: NavParams, private infraestructuraService: InfraestructuraService, private userService: UserService, private incidenciasService: IncidenciasService, private computerService: ComputerService, private alertservice: AlertService) {
     this.loadInit()
   }
 
   ngOnInit() {
-    this.loadInit
+    this.loadInit()
   }
 
   loadInit() {
-
+    this.computerForm.get('aula')?.disable()
+    this.computerForm.get('edificio')?.disable()
     this.userService.getAll().subscribe(u => {
       this.users = u;
       this.selectedUser = this.users[0];
+      this.infraestructuraService.getAllAulas().subscribe((data) => {
+        this.aulas = {};
+        data.forEach(d => {
+          if (!this.aulas[d.edificio]) {
+            this.aulas[d.edificio] = [];
+          }
+          this.aulas[d.edificio].push(d.nombre);
+        })
+        this.infraestructuraService.getAllEdificios().subscribe((data) => {
+          this.edificios = {};
+          data.forEach(d => {
+            if (!this.edificios[d.departamento]) {
+              this.edificios[d.departamento] = [];
+            }
+            this.edificios[d.departamento].push(d.nombre);
+          })
+          this.infraestructuraService.getAllDepartamentos().subscribe((data) => {
+            this.departamentos = data.map(d => d.nombre);
+          });
+        });
+      });
     })
+    this.computerForm.get('department')?.valueChanges.subscribe(department => {
+      this.updateEdificios(department!);
+      this.updateAulas(null); // Reset aulas cuando cambie el departamento
+    });
+
+    // Suscribir al cambio de edificio
+    this.computerForm.get('edificio')?.valueChanges.subscribe(edificio => {
+      this.updateAulas(edificio);
+    });
     if (this.params.get('computer')) {
       if (!this.params.get('canEdit')) {
-        this.computerForm.disable()
+        this.computerForm.disable();
       }
-
+    
       let c: Computer = this.params.get('computer');
       this.computer = c;
-      var disk = new Date(0);
-      disk.setUTCSeconds(c.disk.warrantyExpirationDate['seconds']);
-      var ram = new Date(0);
-      ram.setUTCSeconds(c.ram.warrantyExpirationDate['seconds']);
-      var powerSupply = new Date(0);
-      powerSupply.setUTCSeconds(c.powerSupply.warrantyExpirationDate['seconds']);
-      var motherboard = new Date(0);
-      motherboard.setUTCSeconds(c.motherboard.warrantyExpirationDate['seconds']);
-      var cabinet = new Date(0);
-      cabinet.setUTCSeconds(c.cabinet.warrantyExpirationDate['seconds']);
-      var processador = new Date(0);
-      processador.setUTCSeconds(c.processador.warrantyExpirationDate['seconds']);
-      var mouse = new Date(0);
-      mouse.setUTCSeconds(c.mouse.warrantyExpirationDate['seconds']);
-      var keyboard = new Date(0);
-      keyboard.setUTCSeconds(c.keyboard.warrantyExpirationDate['seconds']);
-
-      this.id = c.id;
+    
+      // Actualiza las listas de edificios y aulas
+      this.updateEdificios(c.department);
+      this.updateAulas(c.edificio);
+    
+      // Habilita los controles de edificio y aula
+      this.computerForm.get('edificio')?.enable();
+      this.computerForm.get('aula')?.enable();
+    
+      // Establece los valores en el formulario
       this.computerForm.setValue({
         name: c.name,
         brand: c.brand,
@@ -142,75 +169,95 @@ export class InventoryDetailPage implements OnInit {
         longitude: c.location ? c.location.longitude : 1,
         red: c.red,
         responsable: c.responsable.id,
-
         uso: c.uso,
         tipoCompra: c.tipoCompra,
         tipoEquipo: c.tipoEquipo,
         so: c.so,
         edificio: c.edificio,
         aula: c.aula,
-
         diskname: c.disk.name,
-        disktype: c.disk.type ? c.disk.type : '',
-        diskcapacity: c.disk.capacity ? c.disk.capacity : 0,
-        diskwarrantyExpirationDate: new Date().toISOString().split('T')[0],// disk.toISOString().split('T')[0],
-        diskserieNumber: c.disk.serieNumber,
-
+        disktype: c.disk.type || '',
+        diskcapacity: c.disk.capacity || 0,
+        diskwarrantyExpirationDate: c.disk.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        diskserieNumber: c.disk.serieNumber || '',
         ramname: c.ram.name,
-        ramtype: c.ram.type ? c.ram.type : '',
-        ramcapacity: c.ram.capacity ? c.ram.capacity : 0,
-        ramwarrantyExpirationDate: new Date().toISOString().split('T')[0],// ram.toISOString().split('T')[0],
-        ramserieNumber: c.ram.serieNumber,
-
+        ramtype: c.ram.type || '',
+        ramcapacity: c.ram.capacity || 0,
+        ramwarrantyExpirationDate: c.ram.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        ramserieNumber: c.ram.serieNumber || '',
         powerSupplyname: c.powerSupply.name,
-        powerSupplytype: c.powerSupply.type ? c.powerSupply.type : '',
-        powerSupplycapacity: c.powerSupply.capacity ? c.powerSupply.capacity : 0,
-        powerSupplywarrantyExpirationDate: new Date().toISOString().split('T')[0],// powerSupply.toISOString().split('T')[0],
-        powerSupplyserieNumber: c.powerSupply.serieNumber,
-
+        powerSupplytype: c.powerSupply.type || '',
+        powerSupplycapacity: c.powerSupply.capacity || 0,
+        powerSupplywarrantyExpirationDate: c.powerSupply.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        powerSupplyserieNumber: c.powerSupply.serieNumber || '',
         motherboardname: c.motherboard.name,
-        motherboardtype: c.motherboard.type ? c.motherboard.type : '',
-        motherboardwarrantyExpirationDate: new Date().toISOString().split('T')[0],// motherboard.toISOString().split('T')[0],
-        motherboardserieNumber: c.motherboard.serieNumber,
-
-        cabinetname: c.cabinet.name,
-        cabinettype: c.cabinet.type ? c.cabinet.type : '',
-        cabinetwarrantyExpirationDate: new Date().toISOString().split('T')[0],// cabinet.toISOString().split('T')[0],
-        cabinetserieNumber: c.cabinet.serieNumber,
-
+        motherboardtype: c.motherboard.type || '',
+        motherboardwarrantyExpirationDate: c.motherboard.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        motherboardserieNumber: c.motherboard.serieNumber || '',
         processadorname: c.processador.name,
-        processadorwarrantyExpirationDate: new Date().toISOString().split('T')[0],// processador.toISOString().split('T')[0],
-        processadorserieNumber: c.processador.serieNumber,
-
+        processadorwarrantyExpirationDate: c.processador.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        processadorserieNumber: c.processador.serieNumber || '',
+        cabinetname: c.cabinet.name,
+        cabinettype: c.cabinet.type || '',
+        cabinetwarrantyExpirationDate: c.cabinet.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        cabinetserieNumber: c.cabinet.serieNumber || '',
         mousename: c.mouse.name,
-        mousewarrantyExpirationDate: new Date().toISOString().split('T')[0],// mouse.toISOString().split('T')[0],
-        mouseserieNumber: c.mouse.serieNumber,
-
+        mousewarrantyExpirationDate: c.mouse.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        mouseserieNumber: c.mouse.serieNumber || '',
         keyboardname: c.keyboard.name,
-        keyboardwarrantyExpirationDate: new Date().toISOString().split('T')[0],// keyboard.toISOString().split('T')[0],
-        keyboardserieNumber: c.keyboard.serieNumber,
-
-        printertype: c.printertype,
-        printerinktype: c.printerinktype,
-        printername: c.printername,
-
-        projectorfocusname: c.projectorfocusname,
-        projectorfocusvolt: c.projectorfocusvolt,
-        projectorfocusbase: c.projectorfocusbase,
+        keyboardwarrantyExpirationDate: c.keyboard.warrantyExpirationDate || new Date().toISOString().split('T')[0],
+        keyboardserieNumber: c.keyboard.serieNumber || '',
+        printertype: c.printertype || '',
+        printerinktype: c.printerinktype || '',
+        printername: c.printername || '',
+        projectorfocusname: c.projectorfocusname || '',
+        projectorfocusvolt: c.projectorfocusvolt || 0,
+        projectorfocusbase: c.projectorfocusbase || ''
       });
-    }
+    }    
   }
 
+  updateEdificios(department: string) {
+    const edificioControl = this.computerForm.get('edificio');
+    if (department) {
+      this.edificiosFiltrados = this.edificios[department] || [];
+      if (this.edificiosFiltrados.length > 0) {
+        edificioControl?.enable();
+      } else {
+        edificioControl?.disable();
+      }
+    } else {
+      this.edificiosFiltrados = [];
+      edificioControl?.disable();
+    }
+  }
+  
+  updateAulas(edificio: string | null) {
+    const aulaControl = this.computerForm.get('aula');
+    if (edificio) {
+      this.aulasFiltradas = this.aulas[edificio] || [];
+      if (this.aulasFiltradas.length > 0) {
+        aulaControl?.enable();
+      } else {
+        aulaControl?.disable();
+      }
+    } else {
+      this.aulasFiltradas = [];
+      aulaControl?.disable();
+    }
+  }
+  
   save() {
-    let c: Computer = {
-      id: this.id,
+    // Construye el objeto de la computadora desde el formulario
+    const c: Computer = {
+      id: this.id, // Utiliza el id existente si es una edición
       name: this.computerForm.controls['name'].value!,
       brand: this.computerForm.controls['brand'].value!,
       date: this.computerForm.controls['date'].value!,
       department: this.computerForm.controls['department'].value!,
       location: {
-        'latitude': this.computerForm.controls['latitude'].value,
-        'longitude': this.computerForm.controls['longitude'].value,
+        latitude: this.computerForm.controls['latitude'].value,
+        longitude: this.computerForm.controls['longitude'].value,
       },
       red: this.computerForm.controls['red'].value!,
       responsable: this.selectedUser,
@@ -235,34 +282,29 @@ export class InventoryDetailPage implements OnInit {
       projectorfocusvolt: this.computerForm.controls['projectorfocusvolt'].value!,
       projectorfocusbase: this.computerForm.controls['projectorfocusbase'].value!,
       history: []
-    }
-    if (this.id.length > 0) {
-      let guardado = false;
-      this.incidenciasService.getByComputerAndStatus(c.id, 6).subscribe(i => {
-        if (!guardado) {
-          if (i) {
-            let h = c.history;
-            console.log(h)
-            c.history = this.computerService.setHistory(this.computer, c, i)
-            console.log(c.history)
-            if (h.length < c.history.length)
-              this.computerService.put(c).then(r => {
-                this.alertservice.successful('Se ha actualizado el dispositivo');
-                guardado = true;
-              });
-            this.alertservice.error('No ha cambiado el No. de Serie');
-          } else {
-            this.alertservice.error('No hay ninguna incidencia con el cambio aprobado');
-          }
-        }
-      })
-    }
-    else
-      this.computerService.add(c).then(r => {
-        this.alertservice.successful('Se ha agregado el dispositivo');
+    };
+  
+    if (this.id && this.id.length > 0) {
+      // Si el id existe, actualiza el registro existente
+      this.computerService.put(c).then(() => {
+        this.alertservice.successful('Se ha actualizado el dispositivo correctamente.');
+        this.params.get('modal').dismiss(); // Cierra el modal
+      }).catch(err => {
+        this.alertservice.error('Hubo un problema al actualizar el dispositivo.');
+        console.error(err);
       });
-    this.params.get('modal').dismiss();
+    } else {
+      // Si no existe id, crea un nuevo registro
+      this.computerService.add(c).then(() => {
+        this.alertservice.successful('Se ha agregado el dispositivo correctamente.');
+        this.params.get('modal').dismiss(); // Cierra el modal
+      }).catch(err => {
+        this.alertservice.error('Hubo un problema al agregar el dispositivo.');
+        console.error(err);
+      });
+    }
   }
+  
 
   getComponent(name: any) {
     let c: comp = {

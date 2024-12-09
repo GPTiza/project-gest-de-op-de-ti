@@ -1,0 +1,20 @@
+<ion-content>
+  <form [formGroup]="departamentoForm">
+    <ion-grid>
+      <h1 class="center">Detalle de Departamento</h1>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Nombre: </ion-label>
+            <ion-input formControlName="nombre"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div class="center">
+        <ion-button button [disabled]="!departamentoForm.valid" color="success" (click)="onSave()">Guardar</ion-button>
+        <ion-button button color="danger" (click)="onCancel()">Cancelar</ion-button>
+      </div>
+    </ion-grid>
+  </form>
+</ion-content>

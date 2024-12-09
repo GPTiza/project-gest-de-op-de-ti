@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Infraestructura</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngFor="let departamento of groupedAulas | objectKeys" class="departamento">
+    <div class="deleteContainerEdificio">
+      <div class="deleteEdificio">
+        <ion-fab-button color="danger" (click)="deleteDepartamento(departamento)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </div>
+      <span class="info" (click)="editDepartamento(departamento)">{{ departamento }}</span>
+      <div *ngFor="let edificio of groupedAulas[departamento] | objectKeys" class="edificio">
+        <div class="deleteContainerEdificio">
+          <div class="deleteEdificio">
+            <ion-fab-button color="danger" (click)="deleteEdificio(edificio)">
+              <ion-icon name="trash"></ion-icon>
+            </ion-fab-button>
+          </div>
+        </div>
+        <span class="info" (click)="editEdificio(edificio)">{{ edificio }}</span>
+        <button *ngFor="let aula of groupedAulas[departamento][edificio]" class="aula" (click)="editAula(aula)">
+          <div class="deleteContainer">
+            <ion-fab-button class="delete" color="danger" (click)="deleteAula(aula)">
+              <ion-icon name="trash"></ion-icon>
+            </ion-fab-button>
+          </div>
+          {{ aula.nombre }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <!-- Botón para agregar departamento -->
+  <ion-button (click)="addDepartamento()" expand="block">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Departamento
+  </ion-button>
+
+  <!-- Botón para agregar edificio -->
+  <ion-button (click)="addEdificio()" expand="block">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Edificio
+  </ion-button>
+
+  <!-- Botón para agregar aula -->
+  <ion-button (click)="addAula()" expand="block">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Aula
+  </ion-button>
+</ion-fab>
+
+

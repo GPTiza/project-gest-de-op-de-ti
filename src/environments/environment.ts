@@ -5,13 +5,15 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyA3Bpnj0uoG_qAJ5FhqbqmoBbgrfOMyqQY",
-    authDomain: "incitec-9ade9.firebaseapp.com",
-    projectId: "incitec-9ade9",
-    storageBucket: "incitec-9ade9.appspot.com",
-    messagingSenderId: "910127128423",
-    appId: "1:910127128423:web:594ef67f33c46b5a9a19c2"
-  }
+    apiKey: "AIzaSyAs-A4RuR6-Dejf2T-adjbrtqFf_MsVIs4",
+    authDomain: "soporte-y-mantenimiento-124e3.firebaseapp.com",
+    databaseURL: "https://soporte-y-mantenimiento-124e3-default-rtdb.firebaseio.com",
+    projectId: "soporte-y-mantenimiento-124e3",
+    storageBucket: "soporte-y-mantenimiento-124e3.firebasestorage.app",
+    messagingSenderId: "429782777275",
+    appId: "1:429782777275:web:16a31f1b990fec52f4589e",
+    measurementId: "G-CLFJETYCDZ"
+  }
 };
 
 /*

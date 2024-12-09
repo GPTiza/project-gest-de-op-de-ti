@@ -26,9 +26,18 @@ const routes: Routes = [
   {
     path: 'incidencias',
     loadChildren: () => import('./pages/incidencias/incidencias.module').then( m => m.IncidenciasPageModule)
-  },  {
+  },
+  {
     path: 'resports',
     loadChildren: () => import('./pages/resports/resports.module').then( m => m.ResportsPageModule)
+  },
+  {
+    path: 'services',
+    loadChildren: () => import('./pages/services/services.module').then( m => m.ServicesPageModule)
+  },
+  {
+    path: 'infrastructure',
+    loadChildren: () => import('./pages/infraestructura/infraestructura.module').then( m => m.InfraestructuraPageModule)
   }
 
 ];

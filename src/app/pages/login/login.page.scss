@@ -1,8 +1,11 @@
 .card-content {
+  border: 5px solid transparent;
+  border-image: linear-gradient(to right, #0088ff, #ff7f50) 1;
+  border-radius: 15px;
   margin: 16px;
-  border-radius: 32px;
   overflow: auto;
   height: 95vh;
+  padding: 10px;
 }
 
 .display-flex {
@@ -98,11 +101,28 @@ input:-webkit-autofill:active {
 }
 
 .login-button {
-  border-radius: 15px;
+  /*border-radius: 15px;
   height: 50px;
   width: 75%;
   margin-left: auto;
+  margin-right: auto;*/
+
+  background: linear-gradient(to right, #ff7f50 50%, #0088ff 50%);
+  border: none;
+  margin-left: auto;
   margin-right: auto;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 75%;
+  transition: background 0.3s;
+
+  &:hover {
+    opacity: 0.9;
+    background: #0088ff;
+  }
 }
 
 .info {
@@ -114,6 +134,7 @@ ion-card-content {
 }
 
 @media only screen and (max-width: 641px) {
+
   // .input-container,.login-button {
   //     width: 100%;
   // }
@@ -121,6 +142,7 @@ ion-card-content {
     height: 95vh;
     margin: 16px;
   }
+
   .info2 {
     display: none;
   }
@@ -131,6 +153,7 @@ ion-card-content {
     width: 60%;
     margin-left: 20%;
   }
+
   //   .input-container,.login-button,.info {
   //       width: 50%;
   //       margin-left: 25%;
@@ -142,6 +165,7 @@ ion-card-content {
     width: 35%;
     margin-left: 32%;
   }
+
   // .input-container,.login-button,.info {
   //     width: 40%;
   //     margin-left: 30%;

@@ -1,0 +1,32 @@
+<ion-content>
+  <form [formGroup]="aulaForm">
+    <ion-grid>
+      <h1 class="center">Detalle de Aula</h1>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Nombre: </ion-label>
+            <ion-input formControlName="nombre"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Edificio: </ion-label>
+            <ion-select formControlName="edificio" interface="popover">
+              <ion-select-option *ngFor="let edificio of edificios" [value]="edificio.nombre">{{ edificio.nombre
+                }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div class="center">
+        <ion-button button [disabled]="!aulaForm.valid" color="success" (click)="onSave()">Guardar</ion-button>
+        <ion-button button color="danger" (click)="onCancel()">Cancelar</ion-button>
+      </div>
+    </ion-grid>
+  </form>
+</ion-content>

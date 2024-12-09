@@ -18,5 +18,6 @@ export interface Incidencia {
     tecnico:User|null,
     user:User,
     diagnostico:string,
+    tiempo:number,
     solicitudCambio:string
 }

@@ -37,7 +37,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Género: </ion-label>
-            <ion-select  interface="popover" formControlName="isMale">
+            <ion-select interface="popover" formControlName="isMale">
               <ion-select-option [value]="true">Masculino</ion-select-option>
               <ion-select-option [value]="false">Femenino</ion-select-option>
             </ion-select>
@@ -55,13 +55,17 @@
         <ion-col>
           <ion-item>
             <ion-label>Departamento: </ion-label>
-            <ion-input formControlName="department"></ion-input>
+            <ion-select interface="popover" formControlName="department">
+              <ion-select-option *ngFor="let departamento of departamentos" [value]="departamento">
+                {{ departamento }}
+              </ion-select-option>
+            </ion-select>
           </ion-item>
         </ion-col>
         <ion-col>
           <ion-item>
             <ion-label>Tipo: </ion-label>
-            <ion-select  interface="popover" formControlName="type">
+            <ion-select interface="popover" formControlName="type">
               <ion-select-option *ngIf="loggedUserType==0" value="0">Admin</ion-select-option>
               <ion-select-option value="1">Jefe del Taller</ion-select-option>
               <ion-select-option value="2">Técnico</ion-select-option>

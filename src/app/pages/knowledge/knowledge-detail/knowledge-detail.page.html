@@ -6,13 +6,14 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label>Problema: </ion-label>
+            <ion-label *ngIf="!isService">Problema: </ion-label>
+            <ion-label *ngIf="isService">Servicio: </ion-label>
             <ion-textarea formControlName="problem" rows="5"></ion-textarea>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
+        <ion-col *ngIf="!isService">
           <ion-item>
             <ion-label>Solución: </ion-label>
             <ion-textarea formControlName="solution" rows="5"></ion-textarea>

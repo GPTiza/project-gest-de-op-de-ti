@@ -61,10 +61,11 @@ export class IncidenciasService {
     })
   }
 
-  public TerminarIncidencia(id: string, diagnostico:string, tecnicoId: string) {
+  public TerminarIncidencia(id: string, diagnostico:string, tiempo:number, tecnicoId: string) {
     return this.db.collection("incidencias").doc(id).update({
       status: 3,
       diagnostico:diagnostico,
+      tiempo:tiempo,
       finishedDate: new Date(),
     }).then(() => {
       if (tecnicoId)
@@ -79,10 +80,11 @@ export class IncidenciasService {
     })
   }
 
-  public SolicitudCambio(id: string, diagnostico:string, cambio: string) {
+  public SolicitudCambio(id: string, diagnostico:string, tiempo:number, cambio: string) {
     return this.db.collection("incidencias").doc(id).update({
       solicitudCambio: cambio,
       diagnostico:diagnostico,
+      tiempo:tiempo,
       status: 5
     })
   }
@@ -163,5 +165,15 @@ export class IncidenciasService {
         data.id = res.docs[0].id;
         return data;
     }));
+  }
+
+  public getServicesR() {
+    return this.db.collection("servicesR").snapshotChanges().pipe(
+      map(res => res.map(a => {
+        const data = a.payload.doc.data() as any;
+        data.id = a.payload.doc.id;
+        return data;
+      }))
+    );
   }
 }
